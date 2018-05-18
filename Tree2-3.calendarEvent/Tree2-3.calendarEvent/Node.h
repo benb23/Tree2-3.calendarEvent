@@ -25,5 +25,5 @@ class Node
 		Node * Find(CalendarEvent i_EventToFind);
 		void Insert(CalendarEvent i_EventToInsert);
 		void Delete(CalendarEvent i_EventToDelete);
-		bool IsLeaf();
+		bool IsLeaf();//test
 };
