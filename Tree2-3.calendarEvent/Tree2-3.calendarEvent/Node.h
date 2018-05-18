@@ -20,6 +20,7 @@ class Node
 		CalendarEvent m_Key;
 	public:
 		Node();
+		Node(Node * i_Left, Node * i_Mid, Node * i_Right);
 		~Node();
 		Node * Find(CalendarEvent i_EventToFind);
 		void Insert(CalendarEvent i_EventToInsert);
