@@ -13,5 +13,9 @@ class CalendarEvent
 	string m_Description; // should not contain special characters or newline
 public:
 	CalendarEvent(time_t startTime, time_t duration, string description); // constructor, destructor, other methods as needed
-	void Print();		// "print" the event to cout
+	void print();		// "print" the event to cout
+	bool IsTimeInEventRage(time_t i_Time);
+	bool operator==(const CalendarEvent& i_Event) const;
+	time_t getEndTime();
+	time_t getStartTime();
 };

@@ -2,6 +2,8 @@
 #pragma once
 #include "CalendarEvent.h"
 #include <ctime>
+#include "CalendarTree.h"
+
 using namespace std;
 
 
@@ -14,16 +16,20 @@ enum eChildDirection
 
 class Node
 {
+	
 	private:
-		Node *m_Left, *m_Mid, *m_Right;
-		time_t m_Min2, m_Min3;
-		CalendarEvent m_Key;
+		friend class CalendarTree;
+		Node *m_Father, *m_Left, *m_Mid, *m_Right;
+		time_t m_Min2, m_Min3;				// CalendarEvent?
+		CalendarEvent * m_Key;
 	public:
 		Node();
-		Node(Node * i_Left, Node * i_Mid, Node * i_Right);
 		~Node();
 		Node * Find(CalendarEvent i_EventToFind);
+		Node * FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
 		void Insert(CalendarEvent i_EventToInsert);
 		void Delete(CalendarEvent i_EventToDelete);
-		bool IsLeaf();//test
+		bool isLeaf();//test
+		void fixTree();
+
 };
