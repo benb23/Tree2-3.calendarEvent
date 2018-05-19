@@ -37,6 +37,6 @@ class Node
 		bool isLeaf();
 		bool brotherHas3children();
 		int getNumOfChildrens();
-
+		bool isNotCrossingWithNodeEvents(CalendarEvent * i_Event);
 
 };

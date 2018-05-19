@@ -51,14 +51,21 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 	}
 }
 
+
+//TODO: Continue
 void Node::Insert(CalendarEvent i_EventToInsert)
 {
-	Node * resNode = new Node();
+	Node * newNode = new Node();
+	newNode->m_Key = &i_EventToInsert;
 
-	// cases according to the father children
-	// if has 1 child (mid == null) --> insertToFatherWithOneChild
-	// if has 2 child (right == null) --> insertToFatherWithTwoChild
-	// if has 3 child (else) --> insertToFatherWith3Child --> split 
+	if (m_Mid == nullptr || m_Right == nullptr)
+	{
+		AddEventToNode();
+	}
+	else
+	{
+		SplitNodeAndAddEvent();
+	}
 
 }
 
@@ -136,4 +143,26 @@ int Node::getNumOfChildrens()
 	{
 		return ONE_CHILD;
 	}
+}
+
+bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
+{
+	int numOfChildren = this->getNumOfChildrens();
+	time_t startTime = i_Event->getStartTime();
+	time_t endTime = i_Event->getEndTime();
+
+	if (numOfChildren == THREE_CHILDREN)
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2 ||
+			startTime >= m_Min2 && endTime <= m_Min3 ||
+			startTime >= m_Min3;
+	}
+	else if (numOfChildren == TWO_CHILDREN)
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2;
+	}
+	else
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2;
+	} 
 }
