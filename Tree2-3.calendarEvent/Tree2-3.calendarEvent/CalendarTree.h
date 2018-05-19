@@ -19,7 +19,7 @@ public:
 	CalendarEvent * deleteFirst();
 	void printSorted();
 	int numBefore(time_t i_currentTime);	// bonus function
-	void fixTree(Node *i_node);
+	void fixTreeAfterDelete(Node *i_node);
 	void fixCaseBrotherHas3Children(Node *i_node);
 	void fixCaseBrotherHas2Children(Node *i_node);
 	void fixMin2Min3ToRoot(Node *i_node);
