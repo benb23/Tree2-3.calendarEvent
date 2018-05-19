@@ -1,15 +1,14 @@
 #pragma once
 #include <ctime>
 #include "CalendarEvent.h"
-
+#include "Node.h"
 
 
 class CalendarTree
 {
 	Node * m_Root;
-	friend class Node;
 public:
-	
+	friend class Node;
 	CalendarTree();
 	~CalendarTree();
 	CalendarEvent * eventAt(time_t eventTime);

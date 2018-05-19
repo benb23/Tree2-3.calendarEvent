@@ -1,5 +1,4 @@
 #include "CalendarTree.h"
-#include "Node.h"
 
 
 CalendarTree::CalendarTree()
@@ -49,9 +48,25 @@ CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 	return nullptr;
 }
 
-CalendarEvent * CalendarTree::insert(CalendarEvent * i_eventTime)
+CalendarEvent * CalendarTree::insert(CalendarEvent * i_EventTime)
 {
-	return nullptr;
+	time_t eventStartTime = i_EventTime->getStartTime();
+	Node * currNode = m_Root;
+
+	// If there is no root --> crate new root
+	if (m_Root == nullptr)
+	{
+		m_Root = new Node();
+		m_Root->m_Key = i_EventTime;
+		m_Root->m_Father = nullptr;
+	}
+	else
+	{
+		currNode  ; //  = find the place to insert	--> currNode = the place father
+					//			1.	if not found return null
+					//			2.	if not in range return null
+	}				//			3.	else insert with insertNode
+
 }
 
 CalendarEvent * CalendarTree::deleteFirst()

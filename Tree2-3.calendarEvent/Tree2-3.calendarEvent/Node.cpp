@@ -54,6 +54,12 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 void Node::Insert(CalendarEvent i_EventToInsert)
 {
 	Node * resNode = new Node();
+
+	// cases according to the father children
+	// if has 1 child (mid == null) --> insertToFatherWithOneChild
+	// if has 2 child (right == null) --> insertToFatherWithTwoChild
+	// if has 3 child (else) --> insertToFatherWith3Child --> split 
+
 }
 
 void Node::Delete(CalendarEvent i_EventToDelete)
