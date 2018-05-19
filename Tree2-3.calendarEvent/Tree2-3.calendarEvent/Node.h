@@ -6,7 +6,11 @@
 
 using namespace std;
 
+#define THREE_CHILDREN 3
+#define TWO_CHILDREN	2
+#define ONE_CHILD		1
 
+//TODO: Delete
 enum eChildDirection
 {
 	leftChild = 0,
@@ -20,8 +24,9 @@ class Node
 	private:
 		friend class CalendarTree;
 		Node *m_Father, *m_Left, *m_Mid, *m_Right;
-		time_t m_Min2, m_Min3;				// CalendarEvent?
+		time_t m_Min1, m_Min2, m_Min3;				// CalendarEvent?
 		CalendarEvent * m_Key;
+		eChildDirection m_Direction;		//TODO: Delete
 	public:
 		Node();
 		~Node();
@@ -29,7 +34,9 @@ class Node
 		Node * FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
 		void Insert(CalendarEvent i_EventToInsert);
 		void Delete(CalendarEvent i_EventToDelete);
-		bool isLeaf();//test
-		void fixTree();
+		bool isLeaf();
+		bool brotherHas3children();
+		int getNumOfChildrens();
+
 
 };

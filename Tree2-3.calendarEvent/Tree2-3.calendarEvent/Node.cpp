@@ -1,9 +1,11 @@
 #include "Node.h"
 
+
+
 Node::Node()
 {
 	m_Father = m_Left = m_Mid = m_Right = nullptr;
-	m_Min2 = m_Min3 = NULL;
+	m_Min1 = m_Min2 = m_Min3 = NULL;
 	m_Key = nullptr;
 }
 
@@ -51,7 +53,7 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 
 void Node::Insert(CalendarEvent i_EventToInsert)
 {
-	
+	Node * resNode = new Node();
 }
 
 void Node::Delete(CalendarEvent i_EventToDelete)
@@ -66,7 +68,6 @@ void Node::Delete(CalendarEvent i_EventToDelete)
 	{
 		node = Find(i_EventToDelete);
 	}
-
 		if (node->m_Father->m_Left == this)
 		{
 			delete m_Father->m_Left;
@@ -91,8 +92,42 @@ bool Node::isLeaf()
 	return this->m_Left == nullptr && this->m_Right == nullptr && this->m_Mid == nullptr;
 }
 
-void Node::fixTree()
+bool Node::brotherHas3children()
 {
+	if (m_Father->m_Left == this || m_Father->m_Right == this)
+	{
+		if (m_Father->m_Mid->getNumOfChildrens() == THREE_CHILDREN)
+		{
+			return true;
+		}
+	}
+	else //case current node is mid child
+	{
+		if (m_Father->m_Right->getNumOfChildrens() == THREE_CHILDREN
+			|| m_Father->m_Left->getNumOfChildrens() == THREE_CHILDREN)
+		{
+			return true;
+		}
+	}
 
+	return false;
 }
 
+int Node::getNumOfChildrens()
+{
+
+	if (this->m_Left != nullptr && this->m_Mid != nullptr && this->m_Right != nullptr)
+	{
+		return THREE_CHILDREN;
+	}
+	else if (this->m_Left != nullptr && this->m_Mid != nullptr
+		|| this->m_Left != nullptr && this->m_Right != nullptr
+		|| this->m_Mid != nullptr && this->m_Right != nullptr)
+	{
+		return TWO_CHILDREN;
+	}
+	else
+	{
+		return ONE_CHILD;
+	}
+}
