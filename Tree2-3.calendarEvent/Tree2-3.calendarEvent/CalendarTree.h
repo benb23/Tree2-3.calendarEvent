@@ -7,7 +7,9 @@
 class CalendarTree
 {
 	Node * m_Root;
+	//Node * firstLeaf;
 	friend class Node;
+
 public:
 	
 	CalendarTree();
