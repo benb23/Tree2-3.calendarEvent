@@ -102,9 +102,11 @@ Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 {
 	time_t eventStartTime = i_Event->getStartTime();
+	CalendarEvent * newEvent = new CalendarEvent(*i_Event);
+
 
 	Node * nodeToInsert = new Node();
-	nodeToInsert->m_Key = i_Event;
+	nodeToInsert->m_Key = newEvent;
 
 	Node * currNode = m_Root;
 
@@ -121,10 +123,10 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 		//			2.	if not in range return null
 		//			3.	else insert with insertNode
 
-		currNode = findInsertStartNode(i_Event);
+		currNode = findInsertStartNode(newEvent);
 		if (currNode != nullptr)
 		{
-			currNode->Insert(*i_Event);
+			currNode->Insert(newEvent);
 		}
 		else
 		{
@@ -148,7 +150,7 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 
 	Node * i_CurrNode = m_Root;
 
-	while (!i_CurrNode->isLeaf())
+	while (!(i_CurrNode->m_Left->isLeaf() || i_CurrNode->m_Mid->isLeaf() || i_CurrNode->m_Right->isLeaf()))
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{

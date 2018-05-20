@@ -1,4 +1,5 @@
 #include "Node.h"
+#include <cmath>
 
 Node::Node()
 {
@@ -70,6 +71,8 @@ void Node::Insert(CalendarEvent * i_EventToInsert)
 	}
 }
 
+
+
 void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
@@ -129,17 +132,83 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	time_t newNodeKey = i_NewNode->m_Key->getStartTime();
 
 	Node * newSplitNode = new Node();
+	Node * newRoot = nullptr;
+	/*
+	
+			father
+			/     \
+		   /       \
+  newSplitNode     This
+
+	
+	*/
+
+
 
 	if (m_Father == nullptr)
-	{
-		newSplitNode = this;
+	{	
+		newRoot = new Node();
+		newRoot->m_Left = newSplitNode;
+		newRoot->m_Mid = this;
 	}
 	else
 	{
 		newSplitNode->m_Father = m_Father;
 	}
 
+	if (newNodeKey < m_Min2 )
+	{
+		// newLeaf is in the left Node (newSplitNode)
 
+		newSplitNode->m_Min1 = (time_t)fmin(newNodeKey, m_Min1);
+		newSplitNode->m_Min2 = (time_t)fmax(newNodeKey, m_Min1);
+		
+		if (newNodeKey < m_Min1)
+		{
+			newSplitNode->m_Left = i_NewNode;
+			newSplitNode->m_Mid = m_Left;
+		}
+		else
+		{
+			newSplitNode->m_Left = m_Left;
+			newSplitNode->m_Mid = i_NewNode;
+		}
+	}
+	else
+	{
+		// newLeaf is in the right Node (this)
+
+		newSplitNode->m_Left = m_Left;
+		newSplitNode->m_Mid = m_Mid;
+
+		if (newNodeKey < m_Min3)
+		{
+			m_Left = i_NewNode;
+			m_Min1 = newNodeKey;
+			m_Mid = m_Right;
+			m_Min2 = m_Mid->m_Key->getStartTime();
+			
+		}
+		else
+		{
+			m_Left = m_Right;
+			m_Min1 = m_Right->m_Key->getStartTime();
+			m_Mid = i_NewNode;
+			m_Min2 = newNodeKey;
+		}
+		m_Min3 = NULL;
+		m_Right = nullptr;
+	}
+	
+	if (newRoot != nullptr)
+	{
+		newRoot->m_Min1 = newSplitNode->m_Min1;
+		newRoot->m_Min2 = this->m_Min1;
+	}
+	//else
+	//{
+	//	m_Father->Insert(newSplitNode);
+	//}
 }
 
 bool Node::isLeaf()
@@ -198,7 +267,7 @@ bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
 	{
 		return startTime >= m_Min1 && endTime <= m_Min2 ||
 			startTime >= m_Min2 && endTime <= m_Min3 ||
-			startTime >= m_Min3;
+			startTime >= m_Min3 || endTime <= m_Min1;
 	}
 	else if (numOfChildren == TWO_CHILDREN)
 	{
