@@ -5,7 +5,7 @@
 #include <iostream>
 
 using namespace std;
-
+//test
 class CalendarEvent
 {
 	time_t m_StartTime;	// time_t is defined in the header file <ctime>
