@@ -7,9 +7,10 @@
 class CalendarTree
 {
 	Node * m_Root;
-	//Node * firstLeaf;
 	friend class Node;
-	void printSortedAuxiliary(Node * root)
+	void printSortedAuxiliary(Node * root);
+	void fixCaseBrotherHas3Children(Node *i_node);
+	void fixCaseBrotherHas2Children(Node *i_node);
 
 public:
 	
@@ -23,8 +24,6 @@ public:
 	void printSorted();
 	int numBefore(time_t i_currentTime);	// bonus function
 	void fixTreeAfterDelete(Node *i_node);
-	void fixCaseBrotherHas3Children(Node *i_node);
-	void fixCaseBrotherHas2Children(Node *i_node);
 	void fixMinToRoot(Node *i_node);
 };
 
