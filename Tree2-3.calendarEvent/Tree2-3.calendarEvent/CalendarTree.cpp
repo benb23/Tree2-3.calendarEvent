@@ -57,9 +57,7 @@ CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 {
 	time_t eventStartTime = i_Event->getStartTime();
-
-	Node * nodeToInsert = new Node();
-	nodeToInsert->m_Key = i_Event;
+	CalendarEvent * newEvent = new CalendarEvent(*i_Event);
 
 	Node * currNode = m_Root;
 
@@ -67,7 +65,7 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 	if (m_Root == nullptr)
 	{
 		m_Root = new Node();
-		m_Root->m_Key = i_Event;
+		m_Root->m_Key =  i_Event;
 		m_Root->m_Father = nullptr;
 	}
 	else
@@ -80,7 +78,7 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 		currNode = findInsertStartNode(i_Event);
 		if (currNode != nullptr)
 		{
-			currNode->Insert(*i_Event);
+			currNode->Insert(newEvent);
 		}
 		else
 		{
@@ -93,14 +91,21 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 
 Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 {
-	if (m_Root == nullptr)
+	if (m_Root->isLeaf())
 	{
-		return nullptr;
+		Node * newLeaf = new Node();
+		newLeaf->m_Key = m_Root->m_Key;
+		m_Root->m_Key = nullptr;
+		m_Root->m_Left = newLeaf;
+		m_Root->m_Min1 = newLeaf->m_Key->getStartTime();
+
+		return m_Root;
 	}
 
 	Node * i_CurrNode = m_Root;
 
-	while (!i_CurrNode->isLeaf())
+
+	while (!(i_CurrNode->m_Left->isLeaf() || i_CurrNode->m_Mid->isLeaf() || i_CurrNode->m_Right->isLeaf()))
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{

@@ -31,9 +31,10 @@ class Node
 		~Node();
 		Node * Find(CalendarEvent i_EventToFind);
 		Node * FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
-		void Insert(CalendarEvent i_EventToInsert);
-		void AddEventWhitoutSplit(Node * i_NewNode);
-		void SplitNodeAndAddEvent(Node * i_NewNode);
+		void Insert(CalendarEvent * i_EventToInsert);
+		void AddEventTo2ChildrenNode(Node * i_NewNode);
+		void AddEventTo3ChildrenNode(Node * i_NewNode);
+		void AddEventTo1ChildrenNode(Node * i_NewNode);
 		bool isLeaf();
 		bool brotherHas3children();
 		int getNumOfChildrens();

@@ -51,22 +51,46 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 }
 
 //TODO: Continue
-void Node::Insert(CalendarEvent i_EventToInsert)
+void Node::Insert(CalendarEvent * i_EventToInsert)
 {
 	Node * newNode = new Node();
-	newNode->m_Key = &i_EventToInsert;
+	newNode->m_Key = i_EventToInsert;
 
-	if (m_Right == nullptr)
+	if (m_Mid == nullptr)
 	{
-		AddEventWhitoutSplit(newNode);
+		AddEventTo1ChildrenNode(newNode);
+	}
+	else if (m_Right == nullptr)
+	{
+		AddEventTo2ChildrenNode(newNode);
 	}
 	else
 	{
-		SplitNodeAndAddEvent(newNode);
+		AddEventTo3ChildrenNode(newNode);
 	}
 }
 
-void Node::AddEventWhitoutSplit(Node * i_NewNode)
+void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
+{
+	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
+
+	if (newKeyStart < m_Min1)
+	{
+		// newNode place is in the left
+		m_Min2 = m_Min1;
+		m_Min1 = newKeyStart;
+
+		// shift children
+		m_Mid = m_Left;
+		m_Left = i_NewNode;
+	}
+	else
+	{
+		m_Mid = i_NewNode;
+	}
+}
+
+void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
 	time_t newKeyEnd = i_NewNode->m_Key->getEndTime();
@@ -100,14 +124,27 @@ void Node::AddEventWhitoutSplit(Node * i_NewNode)
 	//fixMinToRoot(this);//TODO
 }
 
-void Node::SplitNodeAndAddEvent(Node * i_NewNode)
+void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 {
+	time_t newNodeKey = i_NewNode->m_Key->getStartTime();
+
+	Node * newSplitNode = new Node();
+
+	if (m_Father == nullptr)
+	{
+		newSplitNode = this;
+	}
+	else
+	{
+		newSplitNode->m_Father = m_Father;
+	}
+
 
 }
 
 bool Node::isLeaf()
 {
-	return this->m_Left == nullptr && this->m_Right == nullptr && this->m_Mid == nullptr;
+	return m_Left == nullptr && m_Right == nullptr && m_Mid == nullptr;
 }
 
 bool Node::brotherHas3children()
@@ -165,7 +202,7 @@ bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
 	}
 	else if (numOfChildren == TWO_CHILDREN)
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2;
+		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2 || endTime <= m_Min1;
 	}
 	else
 	{
