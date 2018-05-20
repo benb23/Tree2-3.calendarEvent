@@ -33,6 +33,7 @@ class Node
 		Node * Find(CalendarEvent i_EventToFind);
 		Node * FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
 		void Insert(CalendarEvent i_EventToInsert);
+		void AddEventToNode(Node * i_NewNode);
 		void Delete(CalendarEvent i_EventToDelete);
 		bool isLeaf();
 		bool brotherHas3children();
