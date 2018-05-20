@@ -57,39 +57,51 @@ void Node::Insert(CalendarEvent i_EventToInsert)
 
 	if (m_Right == nullptr)
 	{
-		AddEventToNode(newNode);
+		AddEventWhitoutSplit(newNode);
 	}
 	else
 	{
-		SplitNodeAndAddEvent();
+		SplitNodeAndAddEvent(newNode);
 	}
-
 }
 
-void Node::AddEventToNode(Node * i_NewNode)
+void Node::AddEventWhitoutSplit(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
 	time_t newKeyEnd = i_NewNode->m_Key->getEndTime();
 
-	
 	if (newKeyEnd < m_Min2)
 	{
 		// newNode place is in the left
+		m_Min3 = m_Min2;
 		m_Min2 = newKeyStart;
-		shiftChildrenright();
+
+		// shift children
+		m_Right = m_Mid;
+		m_Mid = m_Left;
 		m_Left = i_NewNode;
-		CalendarTree::fixMinToRoot
 	}
 	else if (newKeyStart >= m_Min2 && newKeyEnd <= m_Min3)
 	{
 		// newNode place is in the middle
+		m_Min3 = m_Mid->m_Key->getStartTime();
 
+		m_Right = m_Mid;
+		m_Mid = i_NewNode;
 	}
 	else
 	{
 		// newNode place is in the right
-
+		m_Right = i_NewNode;
+		m_Min3 = i_NewNode->m_Key->getStartTime();
 	}
+
+	this->fixMinToRoot();
+}
+
+void Node::SplitNodeAndAddEvent(Node * i_NewNode)
+{
+
 }
 
 bool Node::isLeaf()
