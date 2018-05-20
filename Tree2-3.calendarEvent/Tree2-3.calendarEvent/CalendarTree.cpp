@@ -8,7 +8,7 @@ CalendarTree::CalendarTree()
 
 CalendarTree::~CalendarTree()
 {
-
+	
 }
 
 CalendarEvent * CalendarTree::eventAt(time_t i_EventTime)
@@ -47,7 +47,7 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 
 CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 {
-	return nullptr;
+
 }
 
 CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
@@ -199,7 +199,7 @@ void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
 			i_node->m_Mid->m_Mid = i_node->m_Father->m_Mid->m_Right;
 			i_node->m_Mid->m_Min3 = NULL;
 			i_node->m_Mid->m_Right = nullptr;
-			fixMinToRoot(i_node->m_Father);
+			i_node->m_Father->fixMinToRoot();
 }
 
 void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
@@ -214,22 +214,5 @@ void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
 		deleteFirst();//??
 }
 
-void CalendarTree::fixMinToRoot(Node *i_node)
-{
-	if (this == m_Root)
-	{
-		return;
-	}
-	else
-	{
-		fixMinToRoot(i_node->m_Father);
-	}
-	i_node->m_Min1 = i_node-> m_Left->m_Min1;
-	i_node->m_Min2 = i_node->m_Mid->m_Min1;
-	if (i_node->m_Right != nullptr)
-	{
-		i_node->m_Min3 = i_node->m_Right->m_Min1;
-	}
-}
 
 

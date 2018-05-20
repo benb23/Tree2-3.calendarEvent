@@ -23,7 +23,6 @@ public:
 	void printSorted();
 	int numBefore(time_t i_currentTime);	// bonus function
 	void fixTreeAfterDelete(Node *i_node);
-	void fixMinToRoot(Node *i_node);
 };
 
 
