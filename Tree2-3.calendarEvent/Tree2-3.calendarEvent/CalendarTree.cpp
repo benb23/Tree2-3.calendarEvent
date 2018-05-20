@@ -82,10 +82,10 @@ int CalendarTree::numBefore(time_t currentTime)
 
 void CalendarTree::fixTreeAfterDelete(Node *i_node)
 {
-	i_node->m_Father->m_Left = i_node->m_Father->m_Mid;
-	i_node->m_Father->m_Min1 = i_node->m_Father->m_Left->m_Key->getStartTime();
 	if (i_node->getNumOfChildrens() == TWO_CHILDREN)
 	{
+			i_node->m_Father->m_Left = i_node->m_Father->m_Mid;
+			i_node->m_Father->m_Min1 = i_node->m_Father->m_Left->m_Key->getStartTime();
 			i_node->m_Father->m_Mid = i_node-> m_Father->m_Right;
 			i_node->m_Min2 = i_node->m_Min3;
 			i_node->m_Min3 = NULL;
@@ -116,16 +116,14 @@ void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
 
 void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
 {
-	if (i_node->m_Mid->m_Left != nullptr)
-	{
-
-
-
-	}
-	else
-	{
-
-	}
+		i_node->m_Mid->m_Right = i_node->m_Mid->m_Mid;
+		i_node->m_Mid->m_Min3 = i_node->m_Mid->m_Min2;
+		i_node->m_Mid->m_Mid = i_node->m_Mid->m_Left;
+		i_node->m_Mid->m_Min2 = i_node->m_Mid->m_Min1;
+		i_node->m_Mid->m_Left = i_node->m_Left->m_Left;
+		i_node->m_Mid->m_Min1 = i_node->m_Left->m_Min2;
+		i_node->m_Left->m_Left = nullptr;
+		deleteFirst();//??
 }
 
 void CalendarTree::fixMin2Min3ToRoot(Node *i_node)
