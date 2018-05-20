@@ -28,7 +28,7 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 		}
 		else
 		{
-			return nullptr;
+			i_CurrentNode = nullptr;
 		}
 	}
 	else
@@ -47,6 +47,7 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 			FindAuxiliary(i_EventToFind, i_CurrentNode->m_Mid);
 		}
 	}
+	return i_CurrentNode;
 }
 
 //TODO: Continue
@@ -96,7 +97,7 @@ void Node::AddEventWhitoutSplit(Node * i_NewNode)
 		m_Min3 = i_NewNode->m_Key->getStartTime();
 	}
 
-	this->fixMinToRoot();
+	//fixMinToRoot(this);//TODO
 }
 
 void Node::SplitNodeAndAddEvent(Node * i_NewNode)

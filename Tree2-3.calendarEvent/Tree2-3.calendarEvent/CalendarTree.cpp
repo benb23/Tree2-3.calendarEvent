@@ -1,5 +1,5 @@
 #include "CalendarTree.h"
-
+#include "Node.h"
 
 CalendarTree::CalendarTree()
 {
@@ -14,7 +14,10 @@ CalendarTree::~CalendarTree()
 CalendarEvent * CalendarTree::eventAt(time_t i_EventTime)
 {
 	Node * res = eventAtAuxiliary(i_EventTime, m_Root);
-	return res->m_Key;
+	if (res != nullptr)
+		return res->m_Key;
+	else
+		return nullptr;
 }
 
 Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
@@ -25,7 +28,7 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 		{
 			return i_CurrNode;
 		}
-		return nullptr;
+		i_CurrNode =  nullptr;
 	}
 	else
 	{
@@ -43,11 +46,12 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 			eventAtAuxiliary(i_EventTime, i_CurrNode->m_Right);
 		}
 	}
+	return i_CurrNode;
 }
 
 CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 {
-
+	return nullptr;
 }
 
 CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
@@ -131,8 +135,8 @@ CalendarEvent * CalendarTree::deleteFirst()
 	}
 
 	firstEvent = currentNode->m_Key;
-	currentNode->m_Left = null;
-	fixTree();
+	currentNode->m_Left = nullptr;
+	fixTreeAfterDelete(currentNode);
 	return firstEvent;
 }
 
@@ -143,11 +147,14 @@ void CalendarTree::printSorted()
 
 void CalendarTree::printSortedAuxiliary(Node * node)
 {
-	if (node->isLeaf())
+	if (node->m_Left->isLeaf())
 	{
 		node->m_Left->m_Key->print();
 		node->m_Mid->m_Key->print();
-		node->m_Right->m_Key->print();
+		if (node->m_Right != nullptr)
+		{
+			node->m_Right->m_Key->print();
+		}
 		return;
 	}
 	else
@@ -199,7 +206,7 @@ void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
 			i_node->m_Mid->m_Mid = i_node->m_Father->m_Mid->m_Right;
 			i_node->m_Mid->m_Min3 = NULL;
 			i_node->m_Mid->m_Right = nullptr;
-			i_node->m_Father->fixMinToRoot();
+			fixMinToRoot(i_node->m_Father);
 }
 
 void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
@@ -216,13 +223,13 @@ void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
 
 void CalendarTree::fixMinToRoot(Node *i_node)
 {
-	if (this == m_Root)
+	if (i_node == m_Root)
 	{
 		return;
 	}
 	else
 	{
-		i_node->m_Father->fixMinToRoot();
+		fixMinToRoot(i_node->m_Father);
 	}
 	i_node->m_Min1 = i_node->m_Left->m_Min1;
 	i_node->m_Min2 = i_node->m_Mid->m_Min1;
