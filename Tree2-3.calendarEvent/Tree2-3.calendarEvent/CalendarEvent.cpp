@@ -10,7 +10,7 @@ CalendarEvent::CalendarEvent(time_t i_StartTime, time_t i_Duration, string i_Des
 
 void CalendarEvent::print()
 {
-	cout << "Event description: "<< m_Description << " | " << "Event start time: " << m_StartTime << " | " << "Event duration: " << " | " << m_Duration<<"/n";
+	cout << m_StartTime <<" "<< m_Duration<< m_Description;
 }
 
 bool CalendarEvent::IsTimeInEventRage(time_t i_Time)
