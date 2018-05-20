@@ -29,7 +29,6 @@ class Node
 	public:
 		Node();
 		~Node();
-		void fixMinToRoot();
 		Node * Find(CalendarEvent i_EventToFind);
 		Node * FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
 		void Insert(CalendarEvent i_EventToInsert);
