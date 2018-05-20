@@ -137,23 +137,6 @@ int Node::getNumOfChildrens()
 	}
 }
 
-void Node::fixMinToRoot()
-{
-	if (this == m_Root)
-	{
-		return;
-	}
-	else
-	{
-		i_node->m_Father->fixMinToRoot();
-	}
-	m_Min1 = m_Left->m_Min1;
-	m_Min2 = m_Mid->m_Min1;
-	if (m_Right != nullptr)
-	{
-		i_m_Min3 = m_Right->m_Min1;
-	}
-}
 
 bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
 {

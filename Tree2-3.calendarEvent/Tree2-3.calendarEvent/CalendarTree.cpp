@@ -214,5 +214,23 @@ void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
 		deleteFirst();//??
 }
 
+void CalendarTree::fixMinToRoot(Node *i_node)
+{
+	if (this == m_Root)
+	{
+		return;
+	}
+	else
+	{
+		i_node->m_Father->fixMinToRoot();
+	}
+	i_node->m_Min1 = i_node->m_Left->m_Min1;
+	i_node->m_Min2 = i_node->m_Mid->m_Min1;
+	if (i_node->m_Right != nullptr)
+	{
+		i_node->m_Min3 = i_node->m_Right->m_Min1;
+	}
+}
+
 
 

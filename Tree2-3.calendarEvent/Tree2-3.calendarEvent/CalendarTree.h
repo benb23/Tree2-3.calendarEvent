@@ -15,6 +15,7 @@ class CalendarTree
 public:
 	CalendarTree();
 	~CalendarTree();
+	void fixMinToRoot(Node *i_node);
 	CalendarEvent * eventAt(time_t eventTime);
 	Node * eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode);
 	CalendarEvent * eventAfter(time_t i_eventTime);
