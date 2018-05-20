@@ -1,7 +1,5 @@
 #include "Node.h"
 
-
-
 Node::Node()
 {
 	m_Father = m_Left = m_Mid = m_Right = nullptr;
@@ -72,7 +70,7 @@ void Node::Insert(CalendarEvent i_EventToInsert)
 void Node::AddEventToNode(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
-	time_t newKeyEnd = i_NewNode->m_Key->getEndtTime();
+	time_t newKeyEnd = i_NewNode->m_Key->getEndTime();
 
 	
 	if (newKeyEnd < m_Min2)
@@ -81,6 +79,7 @@ void Node::AddEventToNode(Node * i_NewNode)
 		m_Min2 = newKeyStart;
 		shiftChildrenright();
 		m_Left = i_NewNode;
+		CalendarTree::fixMinToRoot
 	}
 	else if (newKeyStart >= m_Min2 && newKeyEnd <= m_Min3)
 	{

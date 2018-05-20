@@ -9,7 +9,7 @@ class CalendarTree
 	Node * m_Root;
 	//Node * firstLeaf;
 	friend class Node;
-	void printSortedAuxiliary(Node * root)
+	void printSortedAuxiliary(Node * root);
 
 public:
 	
