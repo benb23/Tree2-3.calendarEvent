@@ -10,7 +10,6 @@ using namespace std;
 #define TWO_CHILDREN	2
 #define ONE_CHILD		1
 
-//TODO: Delete
 enum eChildDirection
 {
 	leftChild = 0,
