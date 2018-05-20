@@ -74,7 +74,28 @@ CalendarEvent * CalendarTree::deleteFirst()
 
 void CalendarTree::printSorted()
 {
+	printSortedAuxiliary(m_Root);
+}
 
+void CalendarTree::printSortedAuxiliary(Node * node)
+{
+	if (node->isLeaf())
+	{
+		node->m_Left->m_Key->print();
+		node->m_Mid->m_Key->print();
+		node->m_Right->m_Key->print();
+		return;
+	}
+	else
+	{
+		printSortedAuxiliary(node->m_Left);
+		printSortedAuxiliary(node->m_Mid);
+		if (node->m_Left != nullptr)
+		{
+			printSortedAuxiliary(node->m_Left);
+
+		}
+	}
 }
 
 // bonus function
