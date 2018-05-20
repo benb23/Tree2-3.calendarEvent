@@ -74,15 +74,22 @@ void Node::AddEventToNode(Node * i_NewNode)
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
 	time_t newKeyEnd = i_NewNode->m_Key->getEndtTime();
 
-	// newNode place is in the left
+	
 	if (newKeyEnd < m_Min2)
 	{
+		// newNode place is in the left
 		m_Min2 = newKeyStart;
 		shiftChildrenright();
 		m_Left = i_NewNode;
 	}
 	else if (newKeyStart >= m_Min2 && newKeyEnd <= m_Min3)
 	{
+		// newNode place is in the middle
+
+	}
+	else
+	{
+		// newNode place is in the right
 
 	}
 }
