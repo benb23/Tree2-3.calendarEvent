@@ -1,13 +1,6 @@
 #include "CalendarEvent.h"
 
 
-CalendarEvent::CalendarEvent(const CalendarEvent& i_Event)
-{
-	m_StartTime = i_Event.m_StartTime;
-	m_Duration = i_Event.m_Duration;
-	m_Description = i_Event.m_Description;
-}
-
 CalendarEvent::CalendarEvent(time_t i_StartTime, time_t i_Duration, string i_Description)
 {
 	m_StartTime = i_StartTime;
@@ -17,7 +10,7 @@ CalendarEvent::CalendarEvent(time_t i_StartTime, time_t i_Duration, string i_Des
 
 void CalendarEvent::print()
 {
-	cout<< m_StartTime << " " << m_Duration << m_Description << "\n" ;
+	cout << m_StartTime <<" "<< m_Duration<< m_Description;
 }
 
 bool CalendarEvent::IsTimeInEventRage(time_t i_Time)

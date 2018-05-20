@@ -51,21 +51,67 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 
 CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 {
-	return nullptr;
+	Node *node = eventAfterAuxiliary(m_Root, i_eventTime);
+	return node->m_Key;
+}
+
+Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
+{
+	if (i_node->isLeaf())
+	{
+		if (i_node->m_Left->m_Key->getStartTime() > i_eventTime)
+		{
+			return i_node->m_Left;
+		}
+		else if (i_node->m_Mid->m_Key->getStartTime() > i_eventTime)
+		{
+			return i_node->m_Mid;
+		}
+		else if(i_node->m_Right->m_Key->getEndTime()>i_eventTime)
+		{
+			if (i_node->m_Right != nullptr)
+			{
+				if (i_node->m_Right->m_Key->getStartTime() > i_eventTime)
+				{
+					return i_node->m_Right;
+				}
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	else
+	{
+		if (i_node->m_Min1 > i_eventTime)
+		{
+			eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+		}
+		else if(i_node->m_Min2 > i_eventTime)
+		{
+			eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+		}
+		else
+		{
+			eventAfterAuxiliary(i_node->m_Right, i_eventTime);
+		}
+	}
 }
 
 CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 {
 	time_t eventStartTime = i_Event->getStartTime();
-	CalendarEvent * newEvent = new CalendarEvent(*i_Event);
+
+	Node * nodeToInsert = new Node();
+	nodeToInsert->m_Key = i_Event;
 
 	Node * currNode = m_Root;
 
 	// If there is no root --> crate new root
 	if (m_Root == nullptr)
 	{
-		m_Root = new Node();
-		m_Root->m_Key =  i_Event;
+		m_Root = nodeToInsert;
 		m_Root->m_Father = nullptr;
 	}
 	else
@@ -78,7 +124,7 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 		currNode = findInsertStartNode(i_Event);
 		if (currNode != nullptr)
 		{
-			currNode->Insert(newEvent);
+			currNode->Insert(*i_Event);
 		}
 		else
 		{
@@ -93,19 +139,16 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 {
 	if (m_Root->isLeaf())
 	{
-		Node * newLeaf = new Node();
-		newLeaf->m_Key = m_Root->m_Key;
-		m_Root->m_Key = nullptr;
-		m_Root->m_Left = newLeaf;
-		m_Root->m_Min1 = newLeaf->m_Key->getStartTime();
-
+		Node *newRoot = new Node();
+		newRoot->m_Left = m_Root;
+		newRoot->m_Min1 = m_Root->m_Key->getStartTime();
+		m_Root = newRoot;
 		return m_Root;
 	}
 
 	Node * i_CurrNode = m_Root;
 
-
-	while (!(i_CurrNode->m_Left->isLeaf() || i_CurrNode->m_Mid->isLeaf() || i_CurrNode->m_Right->isLeaf()))
+	while (!i_CurrNode->isLeaf())
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{
