@@ -1,5 +1,4 @@
 #include "CalendarTree.h"
-#include "Node.h"
 
 
 CalendarTree::CalendarTree()
@@ -51,8 +50,73 @@ CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 	return nullptr;
 }
 
-CalendarEvent * CalendarTree::insert(CalendarEvent * i_eventTime)
+CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 {
+	time_t eventStartTime = i_Event->getStartTime();
+
+	Node * nodeToInsert = new Node();
+	nodeToInsert->m_Key = i_Event;
+
+	Node * currNode = m_Root;
+
+	// If there is no root --> crate new root
+	if (m_Root == nullptr)
+	{
+		m_Root = new Node();
+		m_Root->m_Key = i_Event;
+		m_Root->m_Father = nullptr;
+	}
+	else
+	{
+		//  = find the place to insert	--> currNode = the place father
+		//			1.	if not found return null
+		//			2.	if not in range return null
+		//			3.	else insert with insertNode
+
+		currNode = findInsertStartNode(i_Event);
+		if (currNode != nullptr)
+		{
+			currNode->Insert(*i_Event);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	return i_Event;
+}
+
+Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
+{
+	if (m_Root == nullptr)
+	{
+		return nullptr;
+	}
+
+	Node * i_CurrNode = m_Root;
+
+	while (!i_CurrNode->isLeaf())
+	{
+		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
+		{
+			i_CurrNode = i_CurrNode->m_Right;
+		}
+		else if (i_CurrNode->m_Mid != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min2)
+		{
+			i_CurrNode = i_CurrNode->m_Mid;
+		}
+		else
+		{
+			i_CurrNode = i_CurrNode->m_Left;
+		}
+	}
+
+	if (i_CurrNode->isNotCrossingWithNodeEvents(i_Event))
+	{
+		return i_CurrNode;
+	}
+
 	return nullptr;
 }
 

@@ -51,9 +51,47 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 	}
 }
 
+
+//TODO: Continue
 void Node::Insert(CalendarEvent i_EventToInsert)
 {
-	Node * resNode = new Node();
+	Node * newNode = new Node();
+	newNode->m_Key = &i_EventToInsert;
+
+	if (m_Right == nullptr)
+	{
+		AddEventToNode(newNode);
+	}
+	else
+	{
+		SplitNodeAndAddEvent();
+	}
+
+}
+
+void Node::AddEventToNode(Node * i_NewNode)
+{
+	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
+	time_t newKeyEnd = i_NewNode->m_Key->getEndtTime();
+
+	
+	if (newKeyEnd < m_Min2)
+	{
+		// newNode place is in the left
+		m_Min2 = newKeyStart;
+		shiftChildrenright();
+		m_Left = i_NewNode;
+	}
+	else if (newKeyStart >= m_Min2 && newKeyEnd <= m_Min3)
+	{
+		// newNode place is in the middle
+
+	}
+	else
+	{
+		// newNode place is in the right
+
+	}
 }
 
 bool Node::isLeaf()
@@ -99,4 +137,26 @@ int Node::getNumOfChildrens()
 	{
 		return ONE_CHILD;
 	}
+}
+
+bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
+{
+	int numOfChildren = this->getNumOfChildrens();
+	time_t startTime = i_Event->getStartTime();
+	time_t endTime = i_Event->getEndTime();
+
+	if (numOfChildren == THREE_CHILDREN)
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2 ||
+			startTime >= m_Min2 && endTime <= m_Min3 ||
+			startTime >= m_Min3;
+	}
+	else if (numOfChildren == TWO_CHILDREN)
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2;
+	}
+	else
+	{
+		return startTime >= m_Min1 && endTime <= m_Min2;
+	} 
 }
