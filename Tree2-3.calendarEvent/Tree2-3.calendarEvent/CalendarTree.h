@@ -13,7 +13,6 @@ class CalendarTree
 	void fixCaseBrotherHas2Children(Node *i_node);
 
 public:
-	
 	CalendarTree();
 	~CalendarTree();
 	CalendarEvent * eventAt(time_t eventTime);
