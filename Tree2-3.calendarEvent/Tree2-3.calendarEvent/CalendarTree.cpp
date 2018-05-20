@@ -4,10 +4,12 @@
 
 CalendarTree::CalendarTree()
 {
+	m_Root = nullptr;
 }
 
 CalendarTree::~CalendarTree()
 {
+
 }
 
 CalendarEvent * CalendarTree::eventAt(time_t i_EventTime)

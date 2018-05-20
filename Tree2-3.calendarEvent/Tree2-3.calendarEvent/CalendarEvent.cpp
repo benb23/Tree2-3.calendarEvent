@@ -7,6 +7,11 @@ CalendarEvent::CalendarEvent(time_t i_StartTime, time_t i_Duration, string i_Des
 	m_Description = i_Description;
 }
 
+void CalendarEvent::print()
+{
+	count << "Event description: " << m_Description << " | " << "Event start time: " << m_StartTime << " | " << "Event duration: " << " | " << m_Duration\n;
+}
+
 bool CalendarEvent::IsTimeInEventRage(time_t i_Time)
 {
 	time_t endTime = m_StartTime + m_Duration;
