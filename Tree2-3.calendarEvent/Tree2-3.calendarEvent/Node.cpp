@@ -133,8 +133,10 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 {
 	time_t newNodeKey = i_NewNode->m_Key->getStartTime();
 
-	Node * newSplitNode = new Node();
+	Node * newSplitNodeLeft = new Node();
 	Node * newRoot = nullptr;
+
+
 	/*
 	
 			father
@@ -145,38 +147,37 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	
 	*/
 
-
-
 	if (m_Father == nullptr)
 	{	
 		newRoot = new Node();
-		newRoot->m_Left = newSplitNode;
+		newRoot->m_Left = newSplitNodeLeft;
 		newRoot->m_Mid = this;
+		newSplitNodeLeft->m_Father = newRoot;
+		m_Father = newRoot;
 	}
 	else
 	{
-		newSplitNode->m_Father = m_Father;
-		m_Father = newRoot;
+		newSplitNodeLeft->m_Father = m_Father;
 	}
 
 	if (newNodeKey < m_Min2 )
 	{
 		// newLeaf is in the left Node (newSplitNode)
-		newSplitNode->m_Min1 = (time_t)fmin(newNodeKey, m_Min1);
-		newSplitNode->m_Min2 = (time_t)fmax(newNodeKey, m_Min1);
+		newSplitNodeLeft->m_Min1 = (time_t)fmin(newNodeKey, m_Min1);
+		newSplitNodeLeft->m_Min2 = (time_t)fmax(newNodeKey, m_Min1);
 		m_Min1 = m_Min2;
 		m_Min2 = m_Min3;
 		m_Min3 = NULL;
 
 		if (newNodeKey < m_Min1)
 		{
-			newSplitNode->m_Left = i_NewNode;
-			newSplitNode->m_Mid = m_Left;
+			newSplitNodeLeft->m_Left = i_NewNode;
+			newSplitNodeLeft->m_Mid = m_Left;
 		}
 		else
 		{
-			newSplitNode->m_Left = m_Left;
-			newSplitNode->m_Mid = i_NewNode;
+			newSplitNodeLeft->m_Left = m_Left;
+			newSplitNodeLeft->m_Mid = i_NewNode;
 		}
 		m_Left = m_Mid;
 		m_Mid = m_Right;
@@ -186,10 +187,10 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	{
 		// newLeaf is in the right Node (this)
 
-		newSplitNode->m_Left = m_Left;
-		newSplitNode->m_Mid = m_Mid;
-		newSplitNode->m_Min1 = m_Min1;
-		newSplitNode->m_Min2 = m_Min2;
+		newSplitNodeLeft->m_Left = m_Left;
+		newSplitNodeLeft->m_Mid = m_Mid;
+		newSplitNodeLeft->m_Min1 = m_Min1;
+		newSplitNodeLeft->m_Min2 = m_Min2;
 
 		if (newNodeKey < m_Min3)
 		{
@@ -212,14 +213,25 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	
 	if (newRoot != nullptr)
 	{
-		newRoot->m_Min1 = newSplitNode->m_Min1;
+		//updateNewRoot()
+		Node * temp = this;
+	
+
+
+		newRoot->m_Min1 = newSplitNodeLeft->m_Min1;
 		newRoot->m_Min2 = this->m_Min1;
 	}
 	else
 	{
 		updateMinToRoot(m_Father);
 	}
+	
 }
+
+//void Node::updateNewRoot()
+//{
+//
+//}
 
 //TODO: to check if working
 void Node::updateMinToRoot(Node * i_Node)

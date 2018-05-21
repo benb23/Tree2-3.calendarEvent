@@ -46,7 +46,6 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 			eventAtAuxiliary(i_EventTime, i_CurrNode->m_Right);
 		}
 	}
-	return i_CurrNode;
 }
 
 CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
@@ -126,7 +125,15 @@ CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 		currNode = findInsertStartNode(newEvent);
 		if (currNode != nullptr)
 		{
-			currNode->Insert(newEvent);
+			if (currNode == m_Root && m_Root->getNumOfChildrens() == THREE_CHILDREN)
+			{
+				currNode->Insert(newEvent);
+				m_Root = currNode->m_Father;
+			}
+			else
+			{
+				currNode->Insert(newEvent);
+			}
 		}
 		else
 		{
