@@ -102,7 +102,8 @@ void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
 	{
 		// newNode place is in the left
 		m_Min3 = m_Min2;
-		m_Min2 = newKeyStart;
+		m_Min2 = m_Min1;
+		m_Min1 = newKeyStart;
 
 		// shift children
 		m_Right = m_Mid;
@@ -113,6 +114,7 @@ void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
 	{
 		// newNode place is in the middle
 		m_Min3 = m_Mid->m_Key->getStartTime();
+		m_Min2 = newKeyStart;
 
 		m_Right = m_Mid;
 		m_Mid = i_NewNode;
@@ -121,7 +123,7 @@ void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
 	{
 		// newNode place is in the right
 		m_Right = i_NewNode;
-		m_Min3 = i_NewNode->m_Key->getStartTime();
+		m_Min3 = newKeyStart;
 	}
 
 	//fixMinToRoot(this);//TODO
@@ -154,15 +156,18 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		newSplitNode->m_Father = m_Father;
+		m_Father = newRoot;
 	}
 
 	if (newNodeKey < m_Min2 )
 	{
 		// newLeaf is in the left Node (newSplitNode)
-
 		newSplitNode->m_Min1 = (time_t)fmin(newNodeKey, m_Min1);
 		newSplitNode->m_Min2 = (time_t)fmax(newNodeKey, m_Min1);
-		
+		m_Min1 = m_Min2;
+		m_Min2 = m_Min3;
+		m_Min3 = NULL;
+
 		if (newNodeKey < m_Min1)
 		{
 			newSplitNode->m_Left = i_NewNode;
@@ -173,6 +178,9 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 			newSplitNode->m_Left = m_Left;
 			newSplitNode->m_Mid = i_NewNode;
 		}
+		m_Left = m_Mid;
+		m_Mid = m_Right;
+		m_Right = nullptr;
 	}
 	else
 	{
@@ -180,6 +188,8 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 
 		newSplitNode->m_Left = m_Left;
 		newSplitNode->m_Mid = m_Mid;
+		newSplitNode->m_Min1 = m_Min1;
+		newSplitNode->m_Min2 = m_Min2;
 
 		if (newNodeKey < m_Min3)
 		{
@@ -205,11 +215,29 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 		newRoot->m_Min1 = newSplitNode->m_Min1;
 		newRoot->m_Min2 = this->m_Min1;
 	}
-	//else
-	//{
-	//	m_Father->Insert(newSplitNode);
-	//}
+	else
+	{
+		updateMinToRoot(m_Father);
+	}
 }
+
+//TODO: to check if working
+void Node::updateMinToRoot(Node * i_Node)
+{
+	Node * nodeFather = i_Node->m_Father;
+	if (i_Node == nullptr)
+	{
+		return;
+	}
+	else
+	{
+		nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
+		nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
+		nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
+		return updateMinToRoot(nodeFather);
+	}
+}
+
 
 bool Node::isLeaf()
 {

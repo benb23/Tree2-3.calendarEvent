@@ -39,5 +39,6 @@ class Node
 		bool brotherHas3children();
 		int getNumOfChildrens();
 		bool isNotCrossingWithNodeEvents(CalendarEvent * i_Event);
+		void updateMinToRoot(Node * i_NewNode);
 
 };
