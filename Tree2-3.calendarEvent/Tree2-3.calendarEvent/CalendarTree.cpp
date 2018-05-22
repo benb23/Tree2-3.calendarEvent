@@ -37,7 +37,7 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 			eventAtAuxiliary(i_EventTime, i_CurrNode->m_Left);
 
 		}
-		else if (i_CurrNode->m_Mid != nullptr && i_CurrNode->m_Min2 <= i_EventTime && i_EventTime < i_CurrNode->m_Min3)
+		else if (i_CurrNode->m_Right == nullptr || i_EventTime < i_CurrNode->m_Min3)
 		{
 			eventAtAuxiliary(i_EventTime, i_CurrNode->m_Mid);
 		}
@@ -56,7 +56,7 @@ CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 
 Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 {
-	if (i_node->isLeaf())
+	if (i_node->m_Left->isLeaf())
 	{
 		if (i_node->m_Left->m_Key->getStartTime() > i_eventTime)
 		{
@@ -83,17 +83,47 @@ Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 	}
 	else
 	{
-		if (i_node->m_Min1 > i_eventTime)
+		if (i_node->m_Left->m_Right != nullptr)
 		{
-			eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+			if (i_node->m_Left->m_Min3 > i_eventTime)
+			{
+				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+			}
 		}
-		else if(i_node->m_Min2 > i_eventTime)
+		else if(i_node->m_Left->m_Mid != nullptr)
 		{
-			eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+			if (i_node->m_Left->m_Min2 > i_eventTime)
+			{
+				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+			}
+		}
+		else if (i_node->m_Mid->m_Right != nullptr)
+		{
+			if (i_node->m_Mid->m_Min3 > i_eventTime)
+			{
+				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+			}
+		}
+		else if (i_node->m_Mid->m_Mid != nullptr)
+		{
+			if (i_node->m_Mid->m_Min2 > i_eventTime)
+			{
+				eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+			}
 		}
 		else
 		{
-			eventAfterAuxiliary(i_node->m_Right, i_eventTime);
+			if (i_node->m_Right->m_Right != nullptr)
+			{
+				if (i_node->m_Right->m_Min3 > i_eventTime)
+				{
+					eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+				}
+			}
+			else
+			{
+				eventAfterAuxiliary(i_node->m_Right, i_eventTime);
+			}
 		}
 	}
 }
