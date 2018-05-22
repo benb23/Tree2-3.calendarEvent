@@ -51,22 +51,27 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 {
 	Node *node = eventAfterAuxiliary(m_Root, i_eventTime);
-	return node->m_Key;
+	if (node != nullptr)
+	{
+		return node->m_Key;
+	}
+	else
+		return nullptr;
 }
 
 Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 {
 	if (i_node->m_Left->isLeaf())
 	{
-		if (i_node->m_Left->m_Key->getStartTime() > i_eventTime)
+		if (i_node->m_Left->m_Key->getStartTime() >= i_eventTime)
 		{
 			return i_node->m_Left;
 		}
-		else if (i_node->m_Mid->m_Key->getStartTime() > i_eventTime)
+		else if (i_node->m_Mid->m_Key->getStartTime() >= i_eventTime)
 		{
 			return i_node->m_Mid;
 		}
-		else if(i_node->m_Right->m_Key->getEndTime()>i_eventTime)
+		else if(i_node->m_Right!=nullptr && i_node->m_Right->m_Key->getEndTime() >= i_eventTime)
 		{
 			if (i_node->m_Right != nullptr)
 			{
@@ -83,47 +88,25 @@ Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 	}
 	else
 	{
-		if (i_node->m_Left->m_Right != nullptr)
+		if (i_node->m_Left->m_Right != nullptr && i_node->m_Left->m_Min3 >= i_eventTime)
 		{
-			if (i_node->m_Left->m_Min3 > i_eventTime)
-			{
 				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
-			}
 		}
-		else if(i_node->m_Left->m_Mid != nullptr)
+		else if(i_node->m_Left->m_Min2 >= i_eventTime)
 		{
-			if (i_node->m_Left->m_Min2 > i_eventTime)
-			{
 				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
-			}
 		}
-		else if (i_node->m_Mid->m_Right != nullptr)
+		else if (i_node->m_Mid->m_Right != nullptr && i_node->m_Mid->m_Min3 >= i_eventTime)
 		{
-			if (i_node->m_Mid->m_Min3 > i_eventTime)
-			{
-				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
-			}
-		}
-		else if (i_node->m_Mid->m_Mid != nullptr)
-		{
-			if (i_node->m_Mid->m_Min2 > i_eventTime)
-			{
 				eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
-			}
 		}
-		else
+		else if (i_node->m_Mid->m_Min2 >= i_eventTime)
 		{
-			if (i_node->m_Right->m_Right != nullptr)
-			{
-				if (i_node->m_Right->m_Min3 > i_eventTime)
-				{
-					eventAfterAuxiliary(i_node->m_Left, i_eventTime);
-				}
-			}
-			else
-			{
+				eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+		}
+		else if(i_node->m_Right != nullptr)
+		{
 				eventAfterAuxiliary(i_node->m_Right, i_eventTime);
-			}
 		}
 	}
 }
