@@ -251,7 +251,6 @@ void Node::updateMinToRoot(Node * i_Node)
 }
 
 
-
 bool Node::isLeaf()
 {
 	return m_Left == nullptr && m_Right == nullptr && m_Mid == nullptr;
