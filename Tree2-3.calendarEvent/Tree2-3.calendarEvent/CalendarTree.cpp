@@ -187,7 +187,9 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 
 	Node * i_CurrNode = m_Root;
 
-	while (!(i_CurrNode->m_Left->isLeaf() || i_CurrNode->m_Mid->isLeaf() || i_CurrNode->m_Right->isLeaf()))
+	while (!((i_CurrNode->m_Left != nullptr && i_CurrNode->m_Left->isLeaf()) || 
+			(i_CurrNode->m_Mid != nullptr && i_CurrNode->m_Mid->isLeaf()) ||
+			(i_CurrNode->m_Right != nullptr && i_CurrNode->m_Right->isLeaf())))
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{
