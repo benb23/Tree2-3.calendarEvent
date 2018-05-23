@@ -223,7 +223,7 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	}
 	else
 	{
-		updateMinToRoot(m_Father);
+		updateMinToRoot(this);
 	}
 	
 }
@@ -237,15 +237,26 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 void Node::updateMinToRoot(Node * i_Node)
 {
 	Node * nodeFather = i_Node->m_Father;
-	if (i_Node == nullptr)
+	if (nodeFather == nullptr)
 	{
 		return;
 	}
 	else
 	{
-		nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
-		nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
-		nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
+		if (i_Node->m_Left != nullptr)
+		{
+			nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
+		}
+
+		if (i_Node->m_Mid != nullptr)
+		{
+			nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
+		}
+		if (i_Node->m_Right != nullptr)
+		{
+			nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
+		}
+		
 		return updateMinToRoot(nodeFather);
 	}
 }
