@@ -312,9 +312,9 @@ bool Node::isCrossingWithNodeEvents(CalendarEvent * i_Event)
 
 	if (numOfChildren == THREE_CHILDREN)
 	{
-		return m_Left->m_Key->IsTimeInEventRage(startTime ) || m_Left->m_Key->IsTimeInEventRage(endTime + 1) ||
-			m_Mid->m_Key->IsTimeInEventRage(startTime - 1) || m_Mid->m_Key->IsTimeInEventRage(endTime + 1) ||
-			m_Right->m_Key->IsTimeInEventRage(startTime - 1) || m_Right->m_Key->IsTimeInEventRage(endTime + 1);
+		return m_Left->m_Key->IsTimeInEventRage(startTime) || m_Left->m_Key->IsTimeInEventRage(endTime - 1) ||
+			m_Mid->m_Key->IsTimeInEventRage(startTime) || m_Mid->m_Key->IsTimeInEventRage(endTime - 1) ||
+			m_Right->m_Key->IsTimeInEventRage(startTime) || m_Right->m_Key->IsTimeInEventRage(endTime - 1);
 
 	}
 	else if (numOfChildren == TWO_CHILDREN)
