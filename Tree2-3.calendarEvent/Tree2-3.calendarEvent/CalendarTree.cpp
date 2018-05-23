@@ -165,8 +165,13 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 		newRoot->m_Left = m_Root;
 		newRoot->m_Min1 = m_Root->m_Key->getStartTime();
 		m_Root = newRoot;
+	}
+
+	if (m_Root->getNumOfChildrens() == ONE_CHILD && !m_Root->isCrossingWithNodeEvents(i_Event))
+	{
 		return m_Root;
 	}
+
 
 	Node * i_CurrNode = m_Root;
 
@@ -188,12 +193,22 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 		}
 	}
 
-	if (i_CurrNode->isNotCrossingWithNodeEvents(i_Event))
+	if (!(i_CurrNode->isCrossingWithNodeEvents(i_Event)))
 	{
 		return i_CurrNode;
 	}
 
 	return nullptr;
+}
+
+//TODO:DELETE IF NOT USED
+bool CalendarTree::isCrossingWithNodeEvents2(CalendarEvent * i_Event)
+{
+	time_t startTime = i_Event->getStartTime();
+	time_t endTime = i_Event->getEndTime();
+
+	return i_Event->IsTimeInEventRage(startTime) || i_Event->IsTimeInEventRage(endTime);
+
 }
 
 CalendarEvent * CalendarTree::deleteFirst()

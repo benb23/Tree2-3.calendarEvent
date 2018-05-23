@@ -237,11 +237,7 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 void Node::updateMinToRoot(Node * i_Node)
 {
 	Node * nodeFather = i_Node->m_Father;
-	if (nodeFather == nullptr)
-	{
-		return;
-	}
-	else
+	while (i_Node != nullptr)
 	{
 		if (i_Node->m_Left != nullptr)
 		{
@@ -256,8 +252,6 @@ void Node::updateMinToRoot(Node * i_Node)
 		{
 			nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
 		}
-		
-		return updateMinToRoot(nodeFather);
 	}
 }
 
@@ -308,24 +302,30 @@ int Node::getNumOfChildrens()
 }
 
 
-bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
+bool Node::isCrossingWithNodeEvents(CalendarEvent * i_Event)
 {
 	int numOfChildren = this->getNumOfChildrens();
 	time_t startTime = i_Event->getStartTime();
 	time_t endTime = i_Event->getEndTime();
 
+
+
 	if (numOfChildren == THREE_CHILDREN)
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2 ||
-			startTime >= m_Min2 && endTime <= m_Min3 ||
-			startTime >= m_Min3 || endTime <= m_Min1;
+		return m_Left->m_Key->IsTimeInEventRage(startTime ) || m_Left->m_Key->IsTimeInEventRage(endTime + 1) ||
+			m_Mid->m_Key->IsTimeInEventRage(startTime - 1) || m_Mid->m_Key->IsTimeInEventRage(endTime + 1) ||
+			m_Right->m_Key->IsTimeInEventRage(startTime - 1) || m_Right->m_Key->IsTimeInEventRage(endTime + 1);
+
 	}
 	else if (numOfChildren == TWO_CHILDREN)
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2 || endTime <= m_Min1;
+		return m_Left->m_Key->IsTimeInEventRage(startTime) || m_Left->m_Key->IsTimeInEventRage(endTime) ||
+			m_Mid->m_Key->IsTimeInEventRage(startTime) || m_Mid->m_Key->IsTimeInEventRage(endTime);
 	}
 	else
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2;
+		return m_Left->m_Key->IsTimeInEventRage(startTime) || m_Left->m_Key->IsTimeInEventRage(endTime);
 	} 
+
+
 }

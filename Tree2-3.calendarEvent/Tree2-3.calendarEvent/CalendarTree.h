@@ -27,6 +27,7 @@ public:
 	void printSorted();
 	int numBefore(time_t i_currentTime);	// bonus function
 	void fixTreeAfterDelete(Node *i_node);
+	bool isCrossingWithNodeEvents2(CalendarEvent * i_Event);
 };
 
 

@@ -38,7 +38,7 @@ class Node
 		bool isLeaf();
 		bool brotherHas3children();
 		int getNumOfChildrens();
-		bool isNotCrossingWithNodeEvents(CalendarEvent * i_Event);
+		bool isCrossingWithNodeEvents(CalendarEvent * i_Event);
 		void updateMinToRoot(Node * i_NewNode);
 
 };
