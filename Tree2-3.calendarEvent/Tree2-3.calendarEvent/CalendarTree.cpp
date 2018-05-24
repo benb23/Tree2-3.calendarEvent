@@ -233,11 +233,6 @@ void CalendarTree::printSortedAuxiliary(Node * node)
 	{
 		printSortedAuxiliary(node->m_Left);
 		printSortedAuxiliary(node->m_Mid);
-		if (node->m_Left != nullptr)
-		{
-			printSortedAuxiliary(node->m_Left);
-
-		}
 	}
 }
 
