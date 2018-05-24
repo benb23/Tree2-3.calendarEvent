@@ -90,6 +90,7 @@ void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
 	else
 	{
 		m_Mid = i_NewNode;
+		m_Min2 = newKeyStart;
 	}
 }
 
@@ -158,6 +159,7 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		newSplitNodeLeft->m_Father = m_Father;
+		//TODO: UPADATE a pointer from the father to the child
 	}
 
 	if (newNodeKey < m_Min2 )
@@ -216,16 +218,14 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 		//updateNewRoot()
 		Node * temp = this;
 	
-
-
 		newRoot->m_Min1 = newSplitNodeLeft->m_Min1;
 		newRoot->m_Min2 = this->m_Min1;
 	}
 	else
 	{
-		updateMinToRoot(m_Father);
+		updateMinToRoot(this);
 	}
-	
+
 }
 
 //void Node::updateNewRoot()
@@ -237,16 +237,22 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 void Node::updateMinToRoot(Node * i_Node)
 {
 	Node * nodeFather = i_Node->m_Father;
-	if (i_Node == nullptr)
+	while (i_Node != nullptr)
 	{
-		return;
-	}
-	else
-	{
-		nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
-		nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
-		nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
-		return updateMinToRoot(nodeFather);
+		if (i_Node->m_Left != nullptr)
+		{
+			nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
+		}
+
+		if (i_Node->m_Mid != nullptr)
+		{
+			nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
+		}
+		if (i_Node->m_Right != nullptr)
+		{
+			nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
+		}
+		i_Node = i_Node->m_Father;
 	}
 }
 
@@ -297,24 +303,30 @@ int Node::getNumOfChildrens()
 }
 
 
-bool Node::isNotCrossingWithNodeEvents(CalendarEvent * i_Event)
+bool Node::isCrossingWithNodeEvents(CalendarEvent * i_Event)
 {
 	int numOfChildren = this->getNumOfChildrens();
 	time_t startTime = i_Event->getStartTime();
 	time_t endTime = i_Event->getEndTime();
 
+
+
 	if (numOfChildren == THREE_CHILDREN)
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2 ||
-			startTime >= m_Min2 && endTime <= m_Min3 ||
-			startTime >= m_Min3 || endTime <= m_Min1;
+		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1) ||
+			m_Mid->m_Key->IsTimeInEventRage(startTime + 1) || m_Mid->m_Key->IsTimeInEventRage(endTime - 1) ||
+			m_Right->m_Key->IsTimeInEventRage(startTime + 1) || m_Right->m_Key->IsTimeInEventRage(endTime - 1);
+
 	}
 	else if (numOfChildren == TWO_CHILDREN)
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2 || startTime >= m_Min2 || endTime <= m_Min1;
+		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1) ||
+			m_Mid->m_Key->IsTimeInEventRage(startTime + 1) || m_Mid->m_Key->IsTimeInEventRage(endTime - 1);
 	}
 	else
 	{
-		return startTime >= m_Min1 && endTime <= m_Min2;
+		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1);
 	} 
+
+
 }
