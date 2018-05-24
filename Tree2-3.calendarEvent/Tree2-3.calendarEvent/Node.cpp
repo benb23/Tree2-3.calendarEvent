@@ -264,11 +264,21 @@ bool Node::isLeaf()
 
 bool Node::brotherHas3children()
 {
-	if (m_Father->m_Left == this || m_Father->m_Right == this)
+	if (m_Father->m_Left == this)
 	{
 		if (m_Father->m_Mid->getNumOfChildrens() == THREE_CHILDREN)
 		{
 			return true;
+		}
+	}
+	else if (m_Father->m_Right != nullptr)
+	{
+		if (m_Father->m_Right == this)
+		{
+			if (m_Father->m_Mid->getNumOfChildrens() == THREE_CHILDREN)
+			{
+				return true;
+			}
 		}
 	}
 	else //case current node is mid child
