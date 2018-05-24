@@ -56,6 +56,7 @@ void Node::Insert(CalendarEvent * i_EventToInsert)
 {
 	Node * newNode = new Node();
 	newNode->m_Key = i_EventToInsert;
+	newNode->m_Father = this;
 
 	if (m_Mid == nullptr)
 	{
@@ -264,32 +265,44 @@ bool Node::isLeaf()
 
 bool Node::brotherHas3children()
 {
-	if (m_Father->m_Left == this)
+	if (m_Father->m_Left == this) 
 	{
 		if (m_Father->m_Mid->getNumOfChildrens() == THREE_CHILDREN)
 		{
 			return true;
 		}
 	}
-	else if (m_Father->m_Right != nullptr)
+	else if (m_Father->m_Right != nullptr && m_Father->m_Right == this)
 	{
-		if (m_Father->m_Right == this)
-		{
 			if (m_Father->m_Mid->getNumOfChildrens() == THREE_CHILDREN)
 			{
 				return true;
 			}
-		}
 	}
-	else //case current node is mid child
+	else if(m_Father->m_Mid == this)
 	{
-		if (m_Father->m_Right->getNumOfChildrens() == THREE_CHILDREN
-			|| m_Father->m_Left->getNumOfChildrens() == THREE_CHILDREN)
+		if (m_Father->m_Right != nullptr)
+		{
+			if (m_Father->m_Right->getNumOfChildrens() == THREE_CHILDREN
+				|| m_Father->m_Left->getNumOfChildrens() == THREE_CHILDREN)
+			{
+				return true;
+			}
+		}
+		else if (m_Father->m_Left->getNumOfChildrens() == THREE_CHILDREN)
 		{
 			return true;
 		}
+		else
+		{
+			return false;
+		}
+		
 	}
-
+	else
+	{
+		return false;
+	}
 	return false;
 }
 

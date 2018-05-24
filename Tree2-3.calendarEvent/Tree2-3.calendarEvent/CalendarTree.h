@@ -24,6 +24,7 @@ public:
 	CalendarEvent * insert(CalendarEvent * i_eventTime);	// pointer to Event or Node?
 	Node * findInsertStartNode(CalendarEvent * i_Event);
 	CalendarEvent * deleteFirst();
+	void deleteFirstAuxiliary();
 	void printSorted();
 	int numBefore(time_t i_currentTime);	// bonus function
 	void fixTreeAfterDelete(Node *i_node);
