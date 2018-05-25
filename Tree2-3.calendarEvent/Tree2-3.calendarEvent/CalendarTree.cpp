@@ -1,6 +1,7 @@
 #include "CalendarTree.h"
 #include "Node.h"
 
+
 CalendarTree::CalendarTree()
 {
 	m_Root = nullptr;
@@ -303,7 +304,7 @@ void CalendarTree::fixTreeAfterDelete(Node *i_node)
 			i_node->m_Mid = i_node->m_Right;
 			i_node->m_Right = nullptr;
 			i_node->m_Min2 = i_node->m_Min3;
-			i_node->m_Min3 = NULL;
+			i_node->m_Min3 = MIN_NULL_VAL;
 	}
 	else
 	{
@@ -329,7 +330,7 @@ void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
 			i_node->m_Mid->m_Min1 = i_node->m_Father->m_Mid->m_Min2;
 			i_node->m_Mid->m_Min2 = i_node->m_Father->m_Mid->m_Min3;
 			i_node->m_Mid->m_Mid = i_node->m_Father->m_Mid->m_Right;
-			i_node->m_Mid->m_Min3 = NULL;
+			i_node->m_Mid->m_Min3 = MIN_NULL_VAL;
 			i_node->m_Mid->m_Right = nullptr;
 			fixMinToRoot(i_node->m_Father);
 }

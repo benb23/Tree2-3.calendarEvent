@@ -4,7 +4,7 @@
 Node::Node()
 {
 	m_Father = m_Left = m_Mid = m_Right = nullptr;
-	m_Min1 = m_Min2 = m_Min3 = NULL;
+	m_Min1 = m_Min2 = m_Min3 = MIN_NULL_VAL;
 	m_Key = nullptr;
 }
 
@@ -170,7 +170,7 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 		newSplitNodeLeft->m_Min2 = (time_t)fmax(newNodeKey, m_Min1);
 		m_Min1 = m_Min2;
 		m_Min2 = m_Min3;
-		m_Min3 = NULL;
+		m_Min3 = MIN_NULL_VAL;
 
 		if (newNodeKey < m_Min1)
 		{
@@ -210,7 +210,7 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 			m_Mid = i_NewNode;
 			m_Min2 = newNodeKey;
 		}
-		m_Min3 = NULL;
+		m_Min3 = MIN_NULL_VAL;
 		m_Right = nullptr;
 	}
 	
@@ -228,11 +228,6 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	}
 
 }
-
-//void Node::updateNewRoot()
-//{
-//
-//}
 
 //TODO: to check if working
 void Node::updateMinToRoot(Node * i_Node)
