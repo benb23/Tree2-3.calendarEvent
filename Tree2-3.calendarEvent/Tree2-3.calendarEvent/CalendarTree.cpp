@@ -261,6 +261,7 @@ void CalendarTree::deleteFirstAuxiliary()
 	currentNode->m_Left = nullptr;
 	fixTreeAfterDelete(currentNode);
 }
+
 void CalendarTree::printSorted()
 {
 	printSortedAuxiliary(m_Root);
@@ -289,10 +290,43 @@ void CalendarTree::printSortedAuxiliary(Node * node)
 	}
 }
 
-// bonus function
 int CalendarTree::numBefore(time_t currentTime)
 {
-	return 0;
+	int numOfEvents = 0;
+	numBeforeAuxiliary(m_Root, currentTime, numOfEvents);
+	return numOfEvents;
+}
+
+void CalendarTree::numBeforeAuxiliary(Node * node, time_t currentTime,int& numOfEvents)
+{
+	if (node->m_Left->isLeaf())
+	{
+		if (node->m_Left->m_Key->getStartTime() < currentTime)
+		{
+			numOfEvents++;
+		}
+		if (node->m_Mid->m_Key->getStartTime() < currentTime)
+		{
+			numOfEvents++;
+		}
+		if (node->m_Right != nullptr)
+		{
+			if (node->m_Right->m_Key->getStartTime() < currentTime)
+			{
+				numOfEvents++;
+			}
+		}
+		return;
+	}
+	else
+	{
+		numBeforeAuxiliary(node->m_Left, currentTime, numOfEvents);
+		numBeforeAuxiliary(node->m_Mid, currentTime, numOfEvents);
+		if (node->m_Right != nullptr)
+		{
+			numBeforeAuxiliary(node->m_Right, currentTime, numOfEvents);
+		}
+	}
 }
 
 void CalendarTree::fixTreeAfterDelete(Node *i_node)

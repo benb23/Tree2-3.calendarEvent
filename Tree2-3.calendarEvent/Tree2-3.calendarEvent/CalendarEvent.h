@@ -18,5 +18,4 @@ public:
 	void print();		// "print" the event to cout
 	bool IsTimeInEventRage(time_t i_Time);
 	bool operator==(const CalendarEvent& i_Event) const;
-
 };

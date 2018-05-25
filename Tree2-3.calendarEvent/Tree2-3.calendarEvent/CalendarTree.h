@@ -22,7 +22,7 @@ class CalendarTree
 	void deleteFirstAuxiliary();
 	void fixTreeAfterDelete(Node *i_node);
 	bool isCrossingWithNodeEvents2(CalendarEvent * i_Event);
-
+	void numBeforeAuxiliary(Node * node, time_t currentTime, int& numOfEvents);
 
 public:
 	CalendarTree();
