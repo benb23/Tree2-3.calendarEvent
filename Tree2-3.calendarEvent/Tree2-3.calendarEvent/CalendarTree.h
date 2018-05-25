@@ -22,6 +22,7 @@ class CalendarTree
 	Node * eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode);
 	Node * eventAfterAuxiliary(Node *i_node, time_t i_eventTime);
 	Node * findInsertStartNode(CalendarEvent * i_Event);
+	void numBeforeAuxiliary(Node * node, time_t currentTime, int& numOfEvents);
 
 public:
 	CalendarTree();
