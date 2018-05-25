@@ -1,7 +1,6 @@
 #include "CalendarTree.h"
 #include "Node.h"
 
-
 CalendarTree::CalendarTree()
 {
 	m_Root = nullptr;
@@ -22,9 +21,13 @@ CalendarEvent * CalendarTree::eventAt(time_t i_EventTime)
 	{
 		Node * res = eventAtAuxiliary(i_EventTime, m_Root);
 		if (res != nullptr)
+		{
 			return res->m_Key;
+		}
 		else
+		{
 			return nullptr;
+		}
 	}
 }
 
@@ -32,10 +35,11 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 {
 	if (i_CurrNode->isLeaf())
 	{
-		if (i_CurrNode->m_Key->IsTimeInEventRage(i_EventTime))
+		if (i_CurrNode->m_Key->isTimeInEventRage(i_EventTime))
 		{
 			return i_CurrNode;
 		}
+
 		i_CurrNode =  nullptr;
 	}
 	else
@@ -56,7 +60,7 @@ Node * CalendarTree::eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode)
 	}
 }
 
-CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
+CalendarEvent * CalendarTree::eventAfter(time_t i_EventTime)
 {
 	if (m_Root == nullptr)
 	{
@@ -64,35 +68,37 @@ CalendarEvent * CalendarTree::eventAfter(time_t i_eventTime)
 	}
 	else
 	{
-		Node *node = eventAfterAuxiliary(m_Root, i_eventTime);
+		Node *node = eventAfterAuxiliary(m_Root, i_EventTime);
 		if (node != nullptr)
 		{
 			return node->m_Key;
 		}
 		else
+		{ 
 			return nullptr;
+		}
 	}
 }
 
-Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
+Node * CalendarTree::eventAfterAuxiliary(Node * i_Node, time_t i_EventTime)
 {
-	if (i_node->m_Left->isLeaf())
+	if (i_Node->m_Left->isLeaf())
 	{
-		if (i_node->m_Left->m_Key->getStartTime() >= i_eventTime)
+		if (i_Node->m_Left->m_Key->getStartTime() >= i_EventTime)
 		{
-			return i_node->m_Left;
+			return i_Node->m_Left;
 		}
-		else if (i_node->m_Mid->m_Key->getStartTime() >= i_eventTime)
+		else if (i_Node->m_Mid->m_Key->getStartTime() >= i_EventTime)
 		{
-			return i_node->m_Mid;
+			return i_Node->m_Mid;
 		}
-		else if(i_node->m_Right!=nullptr && i_node->m_Right->m_Key->getEndTime() >= i_eventTime)
+		else if(i_Node->m_Right!=nullptr && i_Node->m_Right->m_Key->getEndTime() >= i_EventTime)
 		{
-			if (i_node->m_Right != nullptr)
+			if (i_Node->m_Right != nullptr)
 			{
-				if (i_node->m_Right->m_Key->getStartTime() > i_eventTime)
+				if (i_Node->m_Right->m_Key->getStartTime() > i_EventTime)
 				{
-					return i_node->m_Right;
+					return i_Node->m_Right;
 				}
 			}
 		}
@@ -103,75 +109,31 @@ Node * CalendarTree::eventAfterAuxiliary(Node * i_node, time_t i_eventTime)
 	}
 	else
 	{
-		if (i_node->m_Left->m_Right != nullptr && i_node->m_Left->m_Min3 >= i_eventTime)
+		if (i_Node->m_Left->m_Right != nullptr && i_Node->m_Left->m_Min3 >= i_EventTime)
 		{
-				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+				eventAfterAuxiliary(i_Node->m_Left, i_EventTime);
 		}
-		else if(i_node->m_Left->m_Min2 >= i_eventTime)
+		else if(i_Node->m_Left->m_Min2 >= i_EventTime)
 		{
-				eventAfterAuxiliary(i_node->m_Left, i_eventTime);
+				eventAfterAuxiliary(i_Node->m_Left, i_EventTime);
 		}
-		else if (i_node->m_Mid->m_Right != nullptr && i_node->m_Mid->m_Min3 >= i_eventTime)
+		else if (i_Node->m_Mid->m_Right != nullptr && i_Node->m_Mid->m_Min3 >= i_EventTime)
 		{
-				eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+				eventAfterAuxiliary(i_Node->m_Mid, i_EventTime);
 		}
-		else if (i_node->m_Mid->m_Min2 >= i_eventTime)
+		else if (i_Node->m_Mid->m_Min2 >= i_EventTime)
 		{
-				eventAfterAuxiliary(i_node->m_Mid, i_eventTime);
+				eventAfterAuxiliary(i_Node->m_Mid, i_EventTime);
 		}
-		else if(i_node->m_Right != nullptr)
+		else if(i_Node->m_Right != nullptr)
 		{
-				eventAfterAuxiliary(i_node->m_Right, i_eventTime);
+				eventAfterAuxiliary(i_Node->m_Right, i_EventTime);
 		}
 	}
 }
 
-CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
-{
-	time_t eventStartTime = i_Event->getStartTime();
-	CalendarEvent * newEvent = new CalendarEvent(*i_Event);
-
-
-	Node * nodeToInsert = new Node();
-	nodeToInsert->m_Key = newEvent;
-
-	Node * currNode = m_Root;
-
-	// If there is no root --> crate new root
-	if (m_Root == nullptr)
-	{
-		m_Root = nodeToInsert;
-		m_Root->m_Father = nullptr;
-	}
-	else
-	{
-		//  = find the place to insert	--> currNode = the place father
-		//			1.	if not found return null
-		//			2.	if not in range return null
-		//			3.	else insert with insertNode
-
-		currNode = findInsertStartNode(newEvent);
-		if (currNode != nullptr)
-		{
-			if (currNode == m_Root && m_Root->getNumOfChildrens() == THREE_CHILDREN)
-			{
-				currNode->Insert(newEvent);
-				m_Root = currNode->m_Father;
-			}
-			else
-			{
-				currNode->Insert(newEvent);
-			}
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	return i_Event;
-}
-
+// The method is findind the currect node for an event to insert and return it (else return nullptr)
+// and check if the input event is not crossing with the event thats already in the tree. 
 Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 {
 	if (m_Root->isLeaf())
@@ -187,12 +149,9 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 		return m_Root;
 	}
 
-
 	Node * i_CurrNode = m_Root;
 
-	while (!((i_CurrNode->m_Left != nullptr && i_CurrNode->m_Left->isLeaf()) || 
-			(i_CurrNode->m_Mid != nullptr && i_CurrNode->m_Mid->isLeaf()) ||
-			(i_CurrNode->m_Right != nullptr && i_CurrNode->m_Right->isLeaf())))
+	while (!isNodeLeavesFather(i_CurrNode))
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{
@@ -216,14 +175,48 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 	return nullptr;
 }
 
-//TODO:DELETE IF NOT USED
-bool CalendarTree::isCrossingWithNodeEvents2(CalendarEvent * i_Event)
+CalendarEvent * CalendarTree::insert(CalendarEvent * i_Event)
 {
-	time_t startTime = i_Event->getStartTime();
-	time_t endTime = i_Event->getEndTime();
+	time_t eventStartTime = i_Event->getStartTime();
+	CalendarEvent * newEvent = new CalendarEvent(*i_Event);
 
-	return i_Event->IsTimeInEventRage(startTime) || i_Event->IsTimeInEventRage(endTime);
+	Node * currNode = m_Root;
 
+	// If there is no root --> crate new root
+	if (m_Root == nullptr)
+	{
+		Node * nodeToInsert = new Node();
+		nodeToInsert->m_Key = newEvent;
+		m_Root = nodeToInsert;
+		m_Root->m_Father = nullptr;
+	}
+	else
+	{
+		//  = find the place to insert	--> currNode = the place father
+		//			1.	if not found return null
+		//			2.	if not in range return null
+		//			3.	else insert with insertNode
+
+		currNode = findInsertStartNode(newEvent);
+		if (currNode != nullptr)
+		{
+			if (currNode == m_Root && m_Root->getNumOfChildrens() == THREE_CHILDREN)
+			{
+				currNode->insert(newEvent);
+				m_Root = currNode->m_Father;
+			}
+			else
+			{
+				currNode->insert(newEvent);
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	return i_Event;
 }
 
 CalendarEvent * CalendarTree::deleteFirst()
@@ -261,6 +254,15 @@ void CalendarTree::deleteFirstAuxiliary()
 	currentNode->m_Left = nullptr;
 	fixTreeAfterDelete(currentNode);
 }
+
+// The method returns TRUE if the node is "leaves father"
+bool CalendarTree::isNodeLeavesFather(Node * i_CurrNode)
+{
+	return ((i_CurrNode->m_Left != nullptr && i_CurrNode->m_Left->isLeaf()) ||
+		(i_CurrNode->m_Mid != nullptr && i_CurrNode->m_Mid->isLeaf()) ||
+		(i_CurrNode->m_Right != nullptr && i_CurrNode->m_Right->isLeaf()));
+}
+
 void CalendarTree::printSorted()
 {
 	printSortedAuxiliary(m_Root);
@@ -289,7 +291,6 @@ void CalendarTree::printSortedAuxiliary(Node * node)
 	}
 }
 
-// bonus function
 int CalendarTree::numBefore(time_t currentTime)
 {
 	return 0;

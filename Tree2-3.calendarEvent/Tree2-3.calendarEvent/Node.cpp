@@ -13,13 +13,13 @@ Node::~Node()
 
 }
 
-Node * Node::Find(CalendarEvent i_EventToFind)
+Node * Node::find(CalendarEvent i_EventToFind)
 {
-	Node *currentNode = this;
-	return FindAuxiliary(i_EventToFind, currentNode);
+	Node * currentNode = this;
+	return findAuxiliary(i_EventToFind, currentNode);
 }
 
-Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
+Node * Node::findAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 {
 	if (i_CurrentNode->isLeaf())
 	{
@@ -36,23 +36,22 @@ Node * Node::FindAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode)
 	{
 		if (i_CurrentNode->m_Left != nullptr && i_EventToFind.getEndTime() < i_CurrentNode->m_Min2)
 		{
-			FindAuxiliary(i_EventToFind, i_CurrentNode->m_Left);
+			findAuxiliary(i_EventToFind, i_CurrentNode->m_Left);
 
 		}
 		else if (i_CurrentNode->m_Mid != nullptr && i_EventToFind.getStartTime() >= i_CurrentNode->m_Min3)
 		{
-			FindAuxiliary(i_EventToFind, i_CurrentNode->m_Right);
+			findAuxiliary(i_EventToFind, i_CurrentNode->m_Right);
 		}
 		else
 		{
-			FindAuxiliary(i_EventToFind, i_CurrentNode->m_Mid);
+			findAuxiliary(i_EventToFind, i_CurrentNode->m_Mid);
 		}
 	}
 	return i_CurrentNode;
 }
 
-//TODO: Continue
-void Node::Insert(CalendarEvent * i_EventToInsert)
+void Node::insert(CalendarEvent * i_EventToInsert)
 {
 	Node * newNode = new Node();
 	newNode->m_Key = i_EventToInsert;
@@ -60,21 +59,19 @@ void Node::Insert(CalendarEvent * i_EventToInsert)
 
 	if (m_Mid == nullptr)
 	{
-		AddEventTo1ChildrenNode(newNode);
+		addEventTo1ChildrenNode(newNode);
 	}
 	else if (m_Right == nullptr)
 	{
-		AddEventTo2ChildrenNode(newNode);
+		addEventTo2ChildrenNode(newNode);
 	}
 	else
 	{
-		AddEventTo3ChildrenNode(newNode);
+		addEventTo3ChildrenNode(newNode);
 	}
 }
 
-
-
-void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
+void Node::addEventTo1ChildrenNode(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
 
@@ -84,7 +81,7 @@ void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
 		m_Min2 = m_Min1;
 		m_Min1 = newKeyStart;
 
-		// shift children
+		// shift children to the right
 		m_Mid = m_Left;
 		m_Left = i_NewNode;
 	}
@@ -95,7 +92,7 @@ void Node::AddEventTo1ChildrenNode(Node * i_NewNode)
 	}
 }
 
-void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
+void Node::addEventTo2ChildrenNode(Node * i_NewNode)
 {
 	time_t newKeyStart = i_NewNode->m_Key->getStartTime();
 	time_t newKeyEnd = i_NewNode->m_Key->getEndTime();
@@ -127,26 +124,21 @@ void Node::AddEventTo2ChildrenNode(Node * i_NewNode)
 		m_Right = i_NewNode;
 		m_Min3 = newKeyStart;
 	}
-
-	//fixMinToRoot(this);//TODO
 }
 
-void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
+void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 {
 	time_t newNodeKey = i_NewNode->m_Key->getStartTime();
 
 	Node * newSplitNodeLeft = new Node();
 	Node * newRoot = nullptr;
 
-
 	/*
-	
 			father
 			/     \
 		   /       \
   newSplitNode     This
 
-	
 	*/
 
 	if (m_Father == nullptr)
@@ -189,7 +181,6 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		// newLeaf is in the right Node (this)
-
 		newSplitNodeLeft->m_Left = m_Left;
 		newSplitNodeLeft->m_Mid = m_Mid;
 		newSplitNodeLeft->m_Min1 = m_Min1;
@@ -201,7 +192,6 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 			m_Min1 = newNodeKey;
 			m_Mid = m_Right;
 			m_Min2 = m_Mid->m_Key->getStartTime();
-			
 		}
 		else
 		{
@@ -216,7 +206,6 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	
 	if (newRoot != nullptr)
 	{
-		//updateNewRoot()
 		Node * temp = this;
 	
 		newRoot->m_Min1 = newSplitNodeLeft->m_Min1;
@@ -226,10 +215,8 @@ void Node::AddEventTo3ChildrenNode(Node * i_NewNode)
 	{
 		updateMinToRoot(this);
 	}
-
 }
 
-//TODO: to check if working
 void Node::updateMinToRoot(Node * i_Node)
 {
 	Node * nodeFather = i_Node->m_Father;
@@ -251,7 +238,6 @@ void Node::updateMinToRoot(Node * i_Node)
 		i_Node = i_Node->m_Father;
 	}
 }
-
 
 bool Node::isLeaf()
 {
@@ -298,6 +284,7 @@ bool Node::brotherHas3children()
 	{
 		return false;
 	}
+
 	return false;
 }
 
@@ -320,31 +307,26 @@ int Node::getNumOfChildrens()
 	}
 }
 
-
 bool Node::isCrossingWithNodeEvents(CalendarEvent * i_Event)
 {
 	int numOfChildren = this->getNumOfChildrens();
 	time_t startTime = i_Event->getStartTime();
 	time_t endTime = i_Event->getEndTime();
 
-
-
 	if (numOfChildren == THREE_CHILDREN)
 	{
-		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1) ||
-			m_Mid->m_Key->IsTimeInEventRage(startTime + 1) || m_Mid->m_Key->IsTimeInEventRage(endTime - 1) ||
-			m_Right->m_Key->IsTimeInEventRage(startTime + 1) || m_Right->m_Key->IsTimeInEventRage(endTime - 1);
+		return m_Left->m_Key->isTimeInEventRage(startTime + 1) || m_Left->m_Key->isTimeInEventRage(endTime - 1) ||
+			m_Mid->m_Key->isTimeInEventRage(startTime + 1) || m_Mid->m_Key->isTimeInEventRage(endTime - 1) ||
+			m_Right->m_Key->isTimeInEventRage(startTime + 1) || m_Right->m_Key->isTimeInEventRage(endTime - 1);
 
 	}
 	else if (numOfChildren == TWO_CHILDREN)
 	{
-		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1) ||
-			m_Mid->m_Key->IsTimeInEventRage(startTime + 1) || m_Mid->m_Key->IsTimeInEventRage(endTime - 1);
+		return m_Left->m_Key->isTimeInEventRage(startTime + 1) || m_Left->m_Key->isTimeInEventRage(endTime - 1) ||
+			m_Mid->m_Key->isTimeInEventRage(startTime + 1) || m_Mid->m_Key->isTimeInEventRage(endTime - 1);
 	}
 	else
 	{
-		return m_Left->m_Key->IsTimeInEventRage(startTime + 1) || m_Left->m_Key->IsTimeInEventRage(endTime - 1);
+		return m_Left->m_Key->isTimeInEventRage(startTime + 1) || m_Left->m_Key->isTimeInEventRage(endTime - 1);
 	} 
-
-
 }

@@ -20,7 +20,7 @@ void CalendarEvent::print()
 	cout << m_StartTime <<" "<< m_Duration << m_Description << "\n";
 }
 
-bool CalendarEvent::IsTimeInEventRage(time_t i_Time)
+bool CalendarEvent::isTimeInEventRage(time_t i_Time)
 {
 	time_t endTime = m_StartTime + m_Duration;
 	return i_Time >= m_StartTime && i_Time <= endTime;
