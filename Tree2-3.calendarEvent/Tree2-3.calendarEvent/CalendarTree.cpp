@@ -340,6 +340,7 @@ void CalendarTree::fixTreeAfterDelete(Node *i_node)
 			i_node->m_Right = nullptr;
 			i_node->m_Min2 = i_node->m_Min3;
 			i_node->m_Min3 = MIN_NULL_VAL;
+			fixMinToRoot(i_node);
 	}
 	else
 	{
