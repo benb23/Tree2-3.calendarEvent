@@ -2,9 +2,6 @@
 /**
 *  Programming exercise - Calendar tree
 */
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 //#include "stdafx.h"  (this will not run on Windows)
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +11,7 @@
 #include <time.h>
 #include <climits>
 using namespace std;
+
 
 #include "CalendarTree.h"
 
@@ -117,7 +115,5 @@ int main(int argc, char* argv[])
 		ev = NULL; // to be clean, since ev is only temporary.
 	}
 	return 0;
-
-	_CrtDumpMemoryLeaks();
 }
 

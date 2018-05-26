@@ -10,7 +10,18 @@ Node::Node()
 
 Node::~Node()
 {
-
+	if (m_Left != nullptr)
+	{
+		delete(m_Left);
+	}
+	if (m_Mid != nullptr)
+	{
+		delete(m_Mid);
+	}
+	if (m_Right != nullptr)
+	{
+		delete(m_Right);
+	}
 }
 
 Node * Node::find(CalendarEvent i_EventToFind)
@@ -152,13 +163,6 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		newSplitNodeLeft->m_Father = m_Father;
-		/*
-		 if father has 2 childern
-		where is this place
-
-
-		//TODO: UPADATE a pointer from the father to the child
-		*/
 	}
 
 	if (newNodeKey < m_Min2 )
@@ -209,15 +213,29 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 		m_Min3 = MIN_NULL_VAL;
 		m_Right = nullptr;
 	}
-	
+	updateFatherAfterSplit(newRoot, newSplitNodeLeft);
 
-	// FATHER UPDATE --> FUNCTION
+	if (newRoot != nullptr)
+	{
+		Node * temp = this;
+	
+		newRoot->m_Min1 = newSplitNodeLeft->m_Min1;
+		newRoot->m_Min2 = this->m_Min1;
+	}
+	else
+	{
+		updateMinToRoot();
+	}
+}
+
+void Node::updateFatherAfterSplit(Node * newRoot,Node * newSplitNodeLeft)
+{
 	if (newRoot == nullptr)
 	{
 		if (m_Father->getNumOfChildrens() == TWO_CHILDREN)
 		{
 			if (m_Father->m_Left == this)
-			{ 
+			{
 				// left side
 				m_Father->m_Left = newSplitNodeLeft;
 				m_Father->m_Min1 = newSplitNodeLeft->m_Min1;
@@ -225,10 +243,9 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 				m_Father->m_Min3 = m_Father->m_Min2;
 				m_Father->m_Min2 = m_Min1;
 				m_Father->m_Mid = this;
-				//TODO: check if min123 updated
 			}
 			else if (m_Father->m_Mid == this)
-			{ 
+			{
 				// right side
 				m_Father->m_Min1 = m_Father->m_Min2;
 				m_Father->m_Right = m_Father->m_Mid;
@@ -237,8 +254,7 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 				m_Father->m_Min2 = newSplitNodeLeft->m_Min1;
 			}
 		}
-		else //(m_Father->getNumOfChildrens() == THREE_CHILDREN)
-		 // 3 childern
+		else 
 		{
 			Node * fatherSplitNode = new Node();
 			fatherSplitNode->m_Father = this->m_Father;
@@ -263,18 +279,6 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 
 			this->m_Father = fatherSplitNode;
 		}
-	}
-
-	if (newRoot != nullptr)
-	{
-		Node * temp = this;
-	
-		newRoot->m_Min1 = newSplitNodeLeft->m_Min1;
-		newRoot->m_Min2 = this->m_Min1;
-	}
-	else
-	{
-		updateMinToRoot();
 	}
 }
 
@@ -314,7 +318,6 @@ bool Node::isNodeLeavesFather()
 		(this->m_Mid != nullptr && this->m_Mid->isLeaf()) ||
 		(this->m_Right != nullptr && this->m_Right->isLeaf()));
 }
-
 
 bool Node::brotherHas3children()
 {
@@ -378,6 +381,8 @@ int Node::getNumOfChildrens()
 	}
 }
 
+// The methos return TRUE if the input Event is crossing with the time 
+// of the Node current Events
 bool Node::isCrossingWithNodeEvents(CalendarEvent * i_Event)
 {
 	int numOfChildren = this->getNumOfChildrens();

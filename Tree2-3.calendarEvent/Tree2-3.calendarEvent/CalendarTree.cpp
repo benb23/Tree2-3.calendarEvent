@@ -6,11 +6,6 @@ CalendarTree::CalendarTree()
 	m_Root = nullptr;
 }
 
-CalendarTree::~CalendarTree()
-{
-	
-}
-
 CalendarEvent * CalendarTree::eventAt(time_t i_EventTime)
 {
 	if (m_Root == nullptr)
@@ -151,7 +146,7 @@ Node * CalendarTree::findInsertStartNode(CalendarEvent * i_Event)
 
 	Node * i_CurrNode = m_Root;
 
-	while (!isNodeLeavesFather(i_CurrNode))
+	while (!i_CurrNode->isNodeLeavesFather())
 	{
 		if (i_CurrNode->m_Right != nullptr && i_Event->getStartTime() >= i_CurrNode->m_Min3)
 		{
@@ -242,14 +237,6 @@ CalendarEvent * CalendarTree::deleteFirst()
 		fixTreeAfterDelete(currentNode);
 	}
 	return firstEvent;
-}
-
-// The method returns TRUE if the node is "leaves father"
-bool CalendarTree::isNodeLeavesFather(Node * i_CurrNode)
-{
-	return ((i_CurrNode->m_Left != nullptr && i_CurrNode->m_Left->isLeaf()) ||
-		(i_CurrNode->m_Mid != nullptr && i_CurrNode->m_Mid->isLeaf()) ||
-		(i_CurrNode->m_Right != nullptr && i_CurrNode->m_Right->isLeaf()));
 }
 
 void CalendarTree::printSorted()

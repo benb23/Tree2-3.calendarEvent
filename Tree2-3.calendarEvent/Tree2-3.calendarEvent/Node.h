@@ -21,6 +21,7 @@ class Node
 		void addEventTo3ChildrenNode(Node * i_NewNode);
 		void addEventTo1ChildrenNode(Node * i_NewNode);
 		void updateMinToRoot();
+		void updateFatherAfterSplit(Node * newRoot,Node * newSplitNodeLeft);
 		int getNumOfChildrens();
 		bool isLeaf();
 		bool brotherHas3children();
