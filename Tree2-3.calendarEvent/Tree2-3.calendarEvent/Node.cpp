@@ -278,7 +278,6 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	}
 }
 
-
 // The method is updating all the Min1, Min2, Min3 values up to the root
 // from the input Node
 void Node::updateMinToRoot()
@@ -354,7 +353,6 @@ bool Node::brotherHas3children()
 
 int Node::getNumOfChildrens()
 {
-
 	if (this->m_Left != nullptr && this->m_Mid != nullptr && this->m_Right != nullptr)
 	{
 		return THREE_CHILDREN;

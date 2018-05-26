@@ -226,6 +226,7 @@ CalendarEvent * CalendarTree::deleteFirst()
 	if (currentNode->isLeaf())
 	{
 		firstEvent = currentNode->m_Key;
+		delete(m_Root);
 		m_Root = nullptr;
 	}
 	else
@@ -236,25 +237,11 @@ CalendarEvent * CalendarTree::deleteFirst()
 		}
 
 		firstEvent = currentNode->m_Left->m_Key;
-		currentNode->m_Left->m_Key = nullptr;
 		delete(currentNode->m_Left);
-		deleteFirstAuxiliary();
+		currentNode->m_Left = nullptr;
+		fixTreeAfterDelete(currentNode);
 	}
 	return firstEvent;
-}
-
-void CalendarTree::deleteFirstAuxiliary()
-{
-	Node * currentNode = m_Root;
-	CalendarEvent * firstEvent;
-
-	while (!currentNode->m_Left->isLeaf())
-	{
-		currentNode = currentNode->m_Left;
-	}
-
-	currentNode->m_Left = nullptr;
-	fixTreeAfterDelete(currentNode);
 }
 
 // The method returns TRUE if the node is "leaves father"
@@ -342,13 +329,14 @@ void CalendarTree::fixTreeAfterDelete(Node *i_node)
 			i_node->m_Right = nullptr;
 			i_node->m_Min2 = i_node->m_Min3;
 			i_node->m_Min3 = MIN_NULL_VAL;
+			i_node->updateMinToRoot();
 	}
 	else
 	{
 		if (i_node == m_Root)
 		{
-				i_node->m_Father = nullptr;
 				m_Root = i_node->m_Mid;
+				m_Root->m_Father = nullptr;
 		}
 		else if (i_node->brotherHas3children())
 		{
@@ -359,8 +347,6 @@ void CalendarTree::fixTreeAfterDelete(Node *i_node)
 			fixCaseBrotherHas2Children(i_node->m_Father);
 		}
 	}
-	i_node->updateMinToRoot();
-
 }
 
 void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
@@ -371,6 +357,7 @@ void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
 			i_node->m_Mid->m_Mid = i_node->m_Father->m_Mid->m_Right;
 			i_node->m_Mid->m_Min3 = MIN_NULL_VAL;
 			i_node->m_Mid->m_Right = nullptr;
+			i_node->updateMinToRoot();
 }
 
 void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
@@ -383,7 +370,8 @@ void CalendarTree::fixCaseBrotherHas2Children(Node *i_node)
 		i_node->m_Mid->m_Min1 = i_node->m_Left->m_Min2;
 		i_node->m_Left->m_Left = nullptr;
 		i_node->m_Left->m_Mid= nullptr;
-		deleteFirstAuxiliary();
+		i_node->updateMinToRoot();
+		deleteFirst();
 }
 
 

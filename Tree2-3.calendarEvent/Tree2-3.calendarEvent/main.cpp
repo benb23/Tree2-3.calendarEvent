@@ -114,7 +114,6 @@ int main(int argc, char* argv[])
 		if (munchLine) cin.ignore(INT_MAX, '\n');
 		ev = NULL; // to be clean, since ev is only temporary.
 	}
-
 	return 0;
 }
 
