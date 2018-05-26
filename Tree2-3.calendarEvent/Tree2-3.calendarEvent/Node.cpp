@@ -307,6 +307,15 @@ bool Node::isLeaf()
 	return m_Left == nullptr && m_Right == nullptr && m_Mid == nullptr;
 }
 
+// The method returns TRUE if the node is "leaves father"
+bool Node::isNodeLeavesFather()
+{
+	return ((this->m_Left != nullptr && this->m_Left->isLeaf()) ||
+		(this->m_Mid != nullptr && this->m_Mid->isLeaf()) ||
+		(this->m_Right != nullptr && this->m_Right->isLeaf()));
+}
+
+
 bool Node::brotherHas3children()
 {
 	if (m_Father->m_Left == this) 

@@ -16,7 +16,6 @@ class CalendarTree
 	void fixCaseBrotherHas3Children(Node *i_node);
 	void fixCaseBrotherHas2Children(Node *i_node);
 	void fixTreeAfterDelete(Node *i_node);
-	bool isNodeLeavesFather(Node * i_CurrNode);
 	Node * eventAtAuxiliary(time_t i_EventTime, Node * i_CurrNode);
 	Node * eventAfterAuxiliary(Node *i_node, time_t i_eventTime);
 	Node * findInsertStartNode(CalendarEvent * i_Event);
