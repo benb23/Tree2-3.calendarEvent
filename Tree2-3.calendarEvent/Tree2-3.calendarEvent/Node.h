@@ -25,6 +25,7 @@ class Node
 		bool isLeaf();
 		bool brotherHas3children();
 		bool isCrossingWithNodeEvents(CalendarEvent * i_Event);
+		bool isNodeLeavesFather();
 		Node * findAuxiliary(CalendarEvent i_EventToFind, Node * i_CurrentNode);
 
 	public:
