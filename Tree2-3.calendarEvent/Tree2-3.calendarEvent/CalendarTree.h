@@ -23,7 +23,6 @@ class CalendarTree
 
 public:
 	CalendarTree();
-	~CalendarTree();
 	CalendarEvent * eventAt(time_t eventTime);
 	CalendarEvent * eventAfter(time_t i_eventTime);
 	CalendarEvent * insert(CalendarEvent * i_eventTime);
