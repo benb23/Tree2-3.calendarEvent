@@ -152,8 +152,13 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		newSplitNodeLeft->m_Father = m_Father;
-		// whoIsMyFather();
+		/*
+		 if father has 2 childern
+		where is this place
+
+
 		//TODO: UPADATE a pointer from the father to the child
+		*/
 	}
 
 	if (newNodeKey < m_Min2 )
@@ -205,6 +210,61 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 		m_Right = nullptr;
 	}
 	
+
+	// FATHER UPDATE --> FUNCTION
+	if (newRoot == nullptr)
+	{
+		if (m_Father->getNumOfChildrens() == TWO_CHILDREN)
+		{
+			if (m_Father->m_Left == this)
+			{ 
+				// left side
+				m_Father->m_Left = newSplitNodeLeft;
+				m_Father->m_Min1 = newSplitNodeLeft->m_Min1;
+				m_Father->m_Right = m_Father->m_Mid;
+				m_Father->m_Min3 = m_Father->m_Min2;
+				m_Father->m_Min2 = m_Min1;
+				m_Father->m_Mid = this;
+				//TODO: check if min123 updated
+			}
+			else if (m_Father->m_Mid == this)
+			{ 
+				// right side
+				m_Father->m_Min1 = m_Father->m_Min2;
+				m_Father->m_Right = m_Father->m_Mid;
+				m_Father->m_Mid = newSplitNodeLeft;
+				m_Father->m_Min3 = m_Min1;
+				m_Father->m_Min2 = newSplitNodeLeft->m_Min1;
+			}
+		}
+		else //(m_Father->getNumOfChildrens() == THREE_CHILDREN)
+		 // 3 childern
+		{
+			Node * fatherSplitNode = new Node();
+			fatherSplitNode->m_Father = this->m_Father;
+			fatherSplitNode->m_Min1 = newSplitNodeLeft->m_Min1;
+			fatherSplitNode->m_Left = newSplitNodeLeft;
+			fatherSplitNode->m_Min2 = this->m_Min1;
+			fatherSplitNode->m_Mid = this;
+			newSplitNodeLeft->m_Father = fatherSplitNode;
+
+			if (m_Father->m_Left == this)
+			{
+				m_Father->m_Left = fatherSplitNode;
+			}
+			else if (m_Father->m_Mid == this)
+			{
+				m_Father->m_Mid = fatherSplitNode;
+			}
+			else
+			{
+				m_Father->m_Right = fatherSplitNode;
+			}
+
+			this->m_Father = fatherSplitNode;
+		}
+	}
+
 	if (newRoot != nullptr)
 	{
 		Node * temp = this;
@@ -218,6 +278,7 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	}
 }
 
+
 // The method is updating all the Min1, Min2, Min3 values up to the root
 // from the input Node
 void Node::updateMinToRoot(Node * i_Node)
@@ -225,18 +286,18 @@ void Node::updateMinToRoot(Node * i_Node)
 	Node * nodeFather = i_Node->m_Father;
 	while (i_Node != nullptr)
 	{
-		if (i_Node->m_Left != nullptr)
+		if (nodeFather->m_Left != nullptr)
 		{
-			nodeFather->m_Min1 = i_Node->m_Left->m_Min1;
+			nodeFather->m_Min1 = nodeFather->m_Left->m_Min1;
 		}
 
-		if (i_Node->m_Mid != nullptr)
+		if (nodeFather->m_Mid != nullptr)
 		{
-			nodeFather->m_Min2 = i_Node->m_Mid->m_Min1;
+			nodeFather->m_Min2 = nodeFather->m_Mid->m_Min1;
 		}
-		if (i_Node->m_Right != nullptr)
+		if (nodeFather->m_Right != nullptr)
 		{
-			nodeFather->m_Min3 = i_Node->m_Right->m_Min1;
+			nodeFather->m_Min3 = nodeFather->m_Right->m_Min1;
 		}
 		i_Node = i_Node->m_Father;
 	}

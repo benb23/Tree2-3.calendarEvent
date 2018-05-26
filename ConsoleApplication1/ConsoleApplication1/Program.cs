@@ -16,6 +16,11 @@ namespace ConsoleApplication1
 
     public class Solution
     {
+        long x=43259435984325849;
+        int res;
+
+        bool b = int.TryParse(x.ToString(), out res);
+
         public bool IsBalanced(TreeNode root)
         {
             int x = IsBalancedAux(root);
