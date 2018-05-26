@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	string desc;
 	CalendarEvent *ev;
 	int n;
-	const int BIG_TEST = 15000;
+	const int BIG_TEST = 100000;
 	bool munchLine;
 
 	while ((inst = cin.get()) != 'Q')
