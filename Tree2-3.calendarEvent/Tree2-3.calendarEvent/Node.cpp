@@ -152,6 +152,7 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	else
 	{
 		newSplitNodeLeft->m_Father = m_Father;
+		// whoIsMyFather();
 		//TODO: UPADATE a pointer from the father to the child
 	}
 
@@ -217,6 +218,8 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	}
 }
 
+// The method is updating all the Min1, Min2, Min3 values up to the root
+// from the input Node
 void Node::updateMinToRoot(Node * i_Node)
 {
 	Node * nodeFather = i_Node->m_Father;
