@@ -357,6 +357,8 @@ void CalendarTree::fixTreeAfterDelete(Node *i_node)
 			fixCaseBrotherHas2Children(i_node->m_Father);
 		}
 	}
+	fixMinToRoot(i_node);
+
 }
 
 void CalendarTree::fixCaseBrotherHas3Children(Node *i_node)
