@@ -236,6 +236,7 @@ CalendarEvent * CalendarTree::deleteFirst()
 		}
 
 		firstEvent = currentNode->m_Left->m_Key;
+		currentNode->m_Left->m_Key = nullptr;
 		deleteFirstAuxiliary();
 	}
 	return firstEvent;
