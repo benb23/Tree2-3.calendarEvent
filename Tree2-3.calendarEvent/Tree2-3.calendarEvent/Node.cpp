@@ -274,17 +274,17 @@ void Node::addEventTo3ChildrenNode(Node * i_NewNode)
 	}
 	else
 	{
-		updateMinToRoot(this);
+		updateMinToRoot();
 	}
 }
 
 
 // The method is updating all the Min1, Min2, Min3 values up to the root
 // from the input Node
-void Node::updateMinToRoot(Node * i_Node)
+void Node::updateMinToRoot()
 {
-	Node * nodeFather = i_Node->m_Father;
-	while (i_Node != nullptr)
+	Node * nodeFather = m_Father;
+	while (nodeFather != nullptr)
 	{
 		if (nodeFather->m_Left != nullptr)
 		{
@@ -299,7 +299,7 @@ void Node::updateMinToRoot(Node * i_Node)
 		{
 			nodeFather->m_Min3 = nodeFather->m_Right->m_Min1;
 		}
-		i_Node = i_Node->m_Father;
+		nodeFather = nodeFather->m_Father;
 	}
 }
 

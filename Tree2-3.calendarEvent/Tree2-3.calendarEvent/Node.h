@@ -20,7 +20,7 @@ class Node
 		void addEventTo2ChildrenNode(Node * i_NewNode);
 		void addEventTo3ChildrenNode(Node * i_NewNode);
 		void addEventTo1ChildrenNode(Node * i_NewNode);
-		void updateMinToRoot(Node * i_Node);
+		void updateMinToRoot();
 		int getNumOfChildrens();
 		bool isLeaf();
 		bool brotherHas3children();
